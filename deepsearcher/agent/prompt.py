@@ -61,6 +61,8 @@ def get_reflect_prompt(
         mini_chunk_str += f"""<chunk_{i}>\n{chunk}\n</chunk_{i}>\n"""
     reflect_prompt = f"""Determine whether additional search queries are needed based on the original query, previous sub queries, and all retrieved document chunks. If further research is required, provide a Python list of up to 3 search queries. If no further research is required, return an empty list.
 
+If the original query is to write a report, then you prefer to generate some further queries, instead return an empty list.
+
     Original Query: {question}
     Previous Sub Queries: {mini_questions}
     Related Chunks: 

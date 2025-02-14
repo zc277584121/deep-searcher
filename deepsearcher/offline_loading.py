@@ -9,7 +9,7 @@ from deepsearcher import configuration
 
 
 def load_from_local_files(paths_or_directory: str | List[str], collection_name: str = None,
-                          collection_description: str = None, force_new_collection: bool = False):
+                          collection_description: str = None, force_new_collection: bool = False, chunk_size=1500, chunk_overlap=100):
     vector_db = configuration.vector_db
     if collection_name is None:
         collection_name = vector_db.default_collection
@@ -28,7 +28,11 @@ def load_from_local_files(paths_or_directory: str | List[str], collection_name: 
             docs = file_loader.load_file(path)
         all_docs.extend(docs)
     # print("Splitting docs to chunks...")
-    chunks = split_docs_to_chunks(all_docs)
+    chunks = split_docs_to_chunks(
+        all_docs,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+    )
 
     chunks = embedding_model.embed_chunks(chunks)
     vector_db.insert_data(collection=collection_name, chunks=chunks)

@@ -42,6 +42,10 @@ class Configuration:
         self.query_settings = {
             "max_iter": 3
         }
+        self.load_settings = {
+            "chunk_size": 1500,
+            "chunk_overlap": 100
+        }
 
     def set_provider_config(self, feature: FeatureType, provider: str, provider_configs: dict):
         """

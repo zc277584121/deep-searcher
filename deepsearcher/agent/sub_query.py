@@ -5,7 +5,7 @@ from deepsearcher.tools import log
 # from deepsearcher.configuration import llm
 from deepsearcher import configuration
 
-PROMPT = """To answer this question more comprehensively, please break down the original question into several sub-questions. Return as list of str.
+PROMPT = """To answer this question more comprehensively, please break down the original question into up to four sub-questions. Return as list of str.
 If this is a very simple question and no decomposition is necessary, then keep the only one original question in the list.
 
 Original Question: {original_query}
