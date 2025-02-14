@@ -25,14 +25,8 @@ def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
         collection_descriptions=[collection_info.description for collection_info in collection_infos],
     )
     chat_response = llm.chat(messages=[{"role": "user", "content": vector_db_search_prompt}])
-    response_content = chat_response.content.strip()
-    if response_content.startswith("```json") and response_content.endswith("```"):
-        response_content = response_content[7:-3]
-    # try:
-    collection_2_query = ast.literal_eval(response_content)
-    # except:
-        # log.color_print(f"Failed to parse response: {response_content}\nReturning empty list.")
-    
+    collection_2_query = llm.literal_eval(chat_response.content)
+
     for collection_info in collection_infos:
         # If a collection description is not provided, use the query as the search query
         if not collection_info.description:

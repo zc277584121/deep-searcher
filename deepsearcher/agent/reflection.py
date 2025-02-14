@@ -12,6 +12,4 @@ def generate_gap_queries(original_query: str, all_sub_queries: List[str], all_ch
     reflect_prompt = get_reflect_prompt(question=original_query, mini_questions=all_sub_queries, mini_chuncks=[chunk.text for chunk in all_chunks])
     chat_response = llm.chat([{"role": "user", "content": reflect_prompt}])
     response_content = chat_response.content
-    if response_content.startswith("```python") and response_content.endswith("```"):
-        response_content = response_content[9:-3]
-    return ast.literal_eval(response_content)
+    return llm.literal_eval(response_content)

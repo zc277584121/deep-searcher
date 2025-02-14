@@ -29,9 +29,4 @@ def generate_sub_queries(original_query: str) -> List[str]:
     llm = configuration.llm
     chat_response = llm.chat(messages=[{"role": "user", "content": PROMPT.format(original_query=original_query)}])
     response_content = chat_response.content
-    try:
-        sub_queries = ast.literal_eval(response_content)
-    except:
-        print(f"Failed to parse response: {response_content}\nReturning original query as sub-query.")
-        sub_queries = [original_query]
-    return sub_queries
+    return llm.literal_eval(response_content)
