@@ -1,3 +1,6 @@
+import os
+import yaml
+
 from typing import Literal
 
 from deepsearcher.embedding.base import BaseEmbedding
@@ -6,12 +9,14 @@ from deepsearcher.loader.file_loader.base import BaseLoader
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 from deepsearcher.vector_db.base import BaseVectorDB
 
-import yaml
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_CONFIG_YAML_PATH = os.path.join(current_dir, "..", "config.yaml")
 
 FeatureType = Literal["llm", "embedding", "file_loader", "web_crawler", "vector_db"]
 
 class Configuration:
-    def __init__(self, config_path: str = "./config.yaml"):
+    def __init__(self, config_path: str = DEFAULT_CONFIG_YAML_PATH):
         # Initialize default configurations
         config_data = self.load_config_from_yaml(config_path)
         self.provide_settings = config_data['provide_settings']
