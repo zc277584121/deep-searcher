@@ -54,6 +54,7 @@ def load_from_website(
     collection_name: str = None,
     collection_description: str = None,
     force_new_collection: bool = False,
+    **crawl_kwargs,
 ):
     if isinstance(urls, str):
         urls = [urls]
@@ -70,7 +71,7 @@ def load_from_website(
 
     all_docs = []
     for url in tqdm(urls, desc="Loading from websites"):
-        docs = web_crawler.crawl_url(url)
+        docs = web_crawler.crawl_url(url, **crawl_kwargs)
         all_docs.extend(docs)
 
     chunks = split_docs_to_chunks(all_docs)

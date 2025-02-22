@@ -8,7 +8,7 @@ class BaseCrawler(ABC):
     def __init__(self, **kwargs):
         pass
 
-    def crawl_url(self, url: str) -> List[Document]:
+    def crawl_url(self, url: str, **crawl_kwargs) -> List[Document]:
         pass
         # Return a list of Document objects which contain the markdown format information of the website
         # In the metadata, it's recommended to include the reference to the url.
