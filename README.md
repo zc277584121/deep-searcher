@@ -116,8 +116,13 @@ result = query("Write a report about xxx.") # Your question here
 
 <details>
   <summary>Example (Pymilvus built-in embedding model)</summary>
+    <p> Use the built-in embedding model in Pymilvus, you can set the model name as <code>"BAAI/bge-base-en-v1.5"</code>, <code>"BAAI/bge-large-en-v1.5"</code>, <code>"jina-embeddings-v3"</code>, etc. <br/>
+    See [milvus_embedding.py](deepsearcher/embedding/milvus_embedding.py) for more details.  </p>
     <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "BAAI/bge-base-en-v1.5"})</code></pre>
+    <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "jina-embeddings-v3"})</code></pre>
+    <p> For Jina's embedding model, you need<code>JINAAI_API_KEY</code>.</p>
     <p> More details about Pymilvus: https://milvus.io/docs/embeddings.md </p>
+
 </details>
 
 <details>
@@ -206,7 +211,7 @@ result = query("Write a report about xxx.") # Your question here
 
 <details>
   <summary>Example (Jina Reader)</summary>
-    <p> Make sure you have prepared your Jina Reader API KEY as an env variable <code>JINA_API_TOKEN</code>.</p>
+    <p> Make sure you have prepared your Jina Reader API KEY as an env variable <code>JINA_API_TOKEN</code> or <code>JINAAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("web_crawler", "JinaCrawler", {})</code></pre>
     <p> More details about Jina Reader: https://jina.ai/reader/ </p>
 </details>

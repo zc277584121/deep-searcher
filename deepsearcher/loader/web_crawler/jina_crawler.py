@@ -9,7 +9,7 @@ from deepsearcher.loader.web_crawler.base import BaseCrawler
 class JinaCrawler(BaseCrawler):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.jina_api_token = os.getenv("JINA_API_TOKEN")
+        self.jina_api_token = os.getenv("JINA_API_TOKEN") or os.getenv("JINAAI_API_KEY")
         if not self.jina_api_token:
             raise ValueError("Missing JINA_API_TOKEN environment variable")
 
