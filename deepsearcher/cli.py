@@ -32,25 +32,48 @@ def main():
     parser.add_argument(
         "--load",
         type=str,
-        help="Load knowledge from a local files or from urls.",
+        nargs='+', # 1 or more files or urls
+        help="Load knowledge from local files or from URLs.",
     )
+
     parser.add_argument(
         "--collection_name",
         type=str,
         default=None,
         help="Destination collection name of loaded knowledge.",
     )
+    parser.add_argument(
+        "--collection_desc",
+        type=str,
+        default=None,
+        help="Description of the collection.",
+    )
 
+    parser.add_argument(
+        "--force_new_collection",
+        type=bool,
+        default=False,
+        help="If you want to drop origin collection and create a new collection on every load, set to True",
+    )
 
     args = parser.parse_args()
     if args.query:
         query(args.query, max_iter=args.max_iter)
     else:
         if args.load:
-            if args.load.startswith("http"):
-                load_from_website(args.load)
-            else:
-                load_from_local_files(args.load)
+            urls = [url for url in args.load if url.startswith("http") ]
+            local_files = [file for file in args.load if not file.startswith("http")]
+            kwargs = {}
+            if args.collection_name:
+                kwargs["collection_name"] = args.collection_name
+            if args.collection_desc:
+                kwargs["collection_description"] = args.collection_desc
+            if args.force_new_collection:
+                kwargs["force_new_collection"] = args.force_new_collection
+            if len(urls) > 0:
+                load_from_website(urls, **kwargs)
+            if len(local_files) > 0:
+                load_from_local_files(local_files, **kwargs)
         else:
             print("Please provide a query or a load argument.")
 
