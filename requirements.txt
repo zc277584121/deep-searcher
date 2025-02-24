@@ -2,7 +2,7 @@ argparse
 firecrawl-py
 langchain_text_splitters
 pdfplumber
-pymilvus[model]
+pymilvus
 openai
 numpy
 tqdm

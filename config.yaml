@@ -31,14 +31,15 @@ provide_settings:
 ##      api_key: "xxxx"  # Uncomment to override the `AZURE_OPENAI_KEY` set in the environment variable
 
   embedding:
-    provider: "MilvusEmbedding"
+    provider: "OpenAIEmbedding"
     config:
-      model: "default"
+      model: "text-embedding-ada-002"
+#      api_key: ""  # Uncomment to override the `OPENAI_API_KEY` set in the environment variable
 
-#    provider: "OpenAIEmbedding"
+
+#    provider: "MilvusEmbedding"
 #    config:
-#      model: "text-embedding-ada-002"
-##      api_key: ""  # Uncomment to override the `OPENAI_API_KEY` set in the environment variable
+#      model: "default"
 
 #    provider: "VoyageEmbedding"
 #    config:

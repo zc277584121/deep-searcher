@@ -47,6 +47,7 @@ config = Configuration()
 # Customize your config here,
 # more configuration see the Configuration Details section below.
 config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o-mini"})
+config.set_provider_config("embedding"， "OpenAIEmbedding", {"model", "text-embedding-ada-002")
 init_config(config = config)
 
 # Load your local data
@@ -115,21 +116,21 @@ result = query("Write a report about xxx.") # Your question here
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the embedding model class.</p>
 
 <details>
-  <summary>Example (Pymilvus built-in embedding model)</summary>
-    <p> Use the built-in embedding model in Pymilvus, you can set the model name as <code>"BAAI/bge-base-en-v1.5"</code>, <code>"BAAI/bge-large-en-v1.5"</code>, <code>"jina-embeddings-v3"</code>, etc. <br/>
-    See [milvus_embedding.py](deepsearcher/embedding/milvus_embedding.py) for more details.  </p>
-    <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "BAAI/bge-base-en-v1.5"})</code></pre>
-    <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "jina-embeddings-v3"})</code></pre>
-    <p> For Jina's embedding model, you need<code>JINAAI_API_KEY</code>.</p>
-    <p> More details about Pymilvus: https://milvus.io/docs/embeddings.md </p>
-
-</details>
-
-<details>
   <summary>Example (OpenAI embedding)</summary>
     <p> Make sure you have prepared your OpenAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-3-small"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/guides/embeddings/use-cases </p>
+</details>
+
+<details>
+  <summary>Example (Pymilvus built-in embedding model)</summary>
+    <p> Use the built-in embedding model in Pymilvus, you can set the model name as <code>"default"</code>, <code>"BAAI/bge-base-en-v1.5"</code>, <code>"BAAI/bge-large-en-v1.5"</code>, <code>"jina-embeddings-v3"</code>, etc. <br/>
+    See [milvus_embedding.py](deepsearcher/embedding/milvus_embedding.py) for more details.  </p>
+    <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "BAAI/bge-base-en-v1.5"})</code></pre>
+    <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "jina-embeddings-v3"})</code></pre>
+    <p> For Jina's embedding model, you need<code>JINAAI_API_KEY</code>.</p>
+    <p> You need to install pymilvus model before running, execute: <code>pip install pymilvus.model</code>. More details about Pymilvus: https://milvus.io/docs/embeddings.md </p>
+
 </details>
 
 <details>
