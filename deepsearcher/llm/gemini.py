@@ -1,5 +1,6 @@
 import os
 from typing import Dict, List
+
 from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
@@ -18,7 +19,8 @@ class Gemini(BaseLLM):
 
     def chat(self, messages: List[Dict]) -> ChatResponse:
         response = self.client.models.generate_content(
-            model=self.model, contents="\n".join([m["content"] for m in messages]),
+            model=self.model,
+            contents="\n".join([m["content"] for m in messages]),
         )
         return ChatResponse(
             content=response.text,

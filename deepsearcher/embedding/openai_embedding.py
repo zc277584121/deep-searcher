@@ -1,8 +1,9 @@
 import os
 from typing import List
-from openai._types import NOT_GIVEN
-from deepsearcher.embedding.base import BaseEmbedding
 
+from openai._types import NOT_GIVEN
+
+from deepsearcher.embedding.base import BaseEmbedding
 
 OPENAI_MODEL_DIM_MAP = {
     "text-embedding-ada-002": 1536,
@@ -32,9 +33,7 @@ class OpenAIEmbedding(BaseEmbedding):
             api_key = kwargs.pop("api_key")
         else:
             api_key = os.getenv("OPENAI_API_KEY")
-        if "model_name" in kwargs and (
-            not model or model == "text-embedding-ada-002"
-        ):
+        if "model_name" in kwargs and (not model or model == "text-embedding-ada-002"):
             model = kwargs.pop("model_name")
         self.model = model
         self.client = OpenAI(api_key=api_key, **kwargs)
@@ -42,19 +41,13 @@ class OpenAIEmbedding(BaseEmbedding):
     def embed_query(self, text: str, dimensions=NOT_GIVEN) -> List[float]:
         # text = text.replace("\n", " ")
         return (
-            self.client.embeddings.create(
-                input=[text], model=self.model, dimensions=dimensions
-            )
+            self.client.embeddings.create(input=[text], model=self.model, dimensions=dimensions)
             .data[0]
             .embedding
         )
 
-    def embed_documents(
-        self, texts: List[str], dimensions=NOT_GIVEN
-    ) -> List[List[float]]:
-        res = self.client.embeddings.create(
-            input=texts, model=self.model, dimensions=dimensions
-        )
+    def embed_documents(self, texts: List[str], dimensions=NOT_GIVEN) -> List[List[float]]:
+        res = self.client.embeddings.create(input=texts, model=self.model, dimensions=dimensions)
         res = [r.embedding for r in res.data]
         return res
 

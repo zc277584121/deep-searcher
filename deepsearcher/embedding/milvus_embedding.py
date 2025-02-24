@@ -1,6 +1,8 @@
 from typing import List
-from deepsearcher.embedding.base import BaseEmbedding
+
 import numpy as np
+
+from deepsearcher.embedding.base import BaseEmbedding
 
 MILVUS_MODEL_DIM_MAP = {
     "BAAI/bge-large-en-v1.5": 1024,
@@ -12,7 +14,7 @@ MILVUS_MODEL_DIM_MAP = {
     "GPTCache/paraphrase-albert-onnx": 768,
     "default": 768,  # 'GPTCache/paraphrase-albert-onnx',
     # see https://github.com/milvus-io/milvus-model/blob/4974e2d190169618a06359bcda040eaed73c4d0f/src/pymilvus/model/dense/onnx.py#L12
-    "jina-embeddings-v3": 1024, # required jina api key
+    "jina-embeddings-v3": 1024,  # required jina api key
 }
 
 
@@ -31,13 +33,9 @@ class MilvusEmbedding(BaseEmbedding):
             self.model = model.DefaultEmbeddingFunction(**kwargs)
         else:
             if model_name.startswith("jina-"):
-                self.model = model.dense.JinaEmbeddingFunction(
-                    model_name, **kwargs
-                )
+                self.model = model.dense.JinaEmbeddingFunction(model_name, **kwargs)
             elif model_name.startswith("BAAI/"):
-                self.model = model.dense.SentenceTransformerEmbeddingFunction(
-                    model_name, **kwargs
-                )
+                self.model = model.dense.SentenceTransformerEmbeddingFunction(model_name, **kwargs)
             else:
                 # Only support default model and BGE series model
                 raise ValueError(f"Currently unsupported model name: {model_name}")

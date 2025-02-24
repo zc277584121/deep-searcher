@@ -1,10 +1,11 @@
 from typing import List, Tuple
 
+from deepsearcher import configuration
+
 # from deepsearcher.configuration import llm
 from deepsearcher.agent.prompt import get_final_answer_prompt
-from deepsearcher.vector_db.base import RetrievalResult
-from deepsearcher import configuration
 from deepsearcher.tools import log
+from deepsearcher.vector_db.base import RetrievalResult
 
 
 def generate_final_answer(

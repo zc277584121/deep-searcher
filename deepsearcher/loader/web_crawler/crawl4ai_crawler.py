@@ -1,6 +1,8 @@
 import asyncio
 from typing import List
+
 from langchain_core.documents import Document
+
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 
 
@@ -11,6 +13,7 @@ class Crawl4AICrawler(BaseCrawler):
 
     def _lazy_init(self):
         from crawl4ai import AsyncWebCrawler
+
         if self.crawler is None:
             self.crawler = AsyncWebCrawler()
 
@@ -28,7 +31,7 @@ class Crawl4AICrawler(BaseCrawler):
                 "success": result.success,
                 "status_code": result.status_code,
                 "media": result.media,
-                "links": result.links
+                "links": result.links,
             }
 
             if hasattr(result, "metadata") and result.metadata:

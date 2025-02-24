@@ -1,10 +1,14 @@
-from typing import List
-from langchain_core.documents import Document
-from deepsearcher.loader.file_loader.base import BaseLoader
 import json
+from typing import List
+
+from langchain_core.documents import Document
+
+from deepsearcher.loader.file_loader.base import BaseLoader
+
 
 class JsonFileLoader(BaseLoader):
     """load .json or .jsonl files"""
+
     def __init__(self, text_key: str):
         self.text_key = text_key
 
@@ -29,7 +33,7 @@ class JsonFileLoader(BaseLoader):
 
     def _read_jsonl_file(self, file_path: str) -> List[dict]:
         data_list = []
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             for line in file:
                 try:
                     json_data = json.loads(line)

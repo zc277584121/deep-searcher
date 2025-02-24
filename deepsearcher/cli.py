@@ -1,26 +1,25 @@
 import argparse
 import logging
+import warnings
+
 from deepsearcher.configuration import Configuration, init_config
-from deepsearcher.online_query import query
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
+from deepsearcher.online_query import query
 
 httpx_logger = logging.getLogger("httpx")  # disable openai's logger output
 httpx_logger.setLevel(logging.WARNING)
 
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)  # disable warning output
+
+warnings.simplefilter(action="ignore", category=FutureWarning)  # disable warning output
+
 
 def main():
-    config = Configuration()  #Customize your config here
-    init_config(config = config)
+    config = Configuration()  # Customize your config here
+    init_config(config=config)
 
-    parser = argparse.ArgumentParser(
-        prog="deepsearcher", description="Deep Searcher."
-    )
+    parser = argparse.ArgumentParser(prog="deepsearcher", description="Deep Searcher.")
     ## Arguments of query
-    parser.add_argument(
-        "--query", type=str, default="", help="query question or search topic."
-    )
+    parser.add_argument("--query", type=str, default="", help="query question or search topic.")
     parser.add_argument(
         "--max_iter",
         type=int,
@@ -32,7 +31,7 @@ def main():
     parser.add_argument(
         "--load",
         type=str,
-        nargs='+', # 1 or more files or urls
+        nargs="+",  # 1 or more files or urls
         help="Load knowledge from local files or from URLs.",
     )
 
@@ -61,7 +60,7 @@ def main():
         query(args.query, max_iter=args.max_iter)
     else:
         if args.load:
-            urls = [url for url in args.load if url.startswith("http") ]
+            urls = [url for url in args.load if url.startswith("http")]
             local_files = [file for file in args.load if not file.startswith("http")]
             kwargs = {}
             if args.collection_name:

@@ -1,7 +1,9 @@
 import os
 from typing import List, Optional
+
 from firecrawl import FirecrawlApp
 from langchain_core.documents import Document
+
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 
 
@@ -11,11 +13,11 @@ class FireCrawlCrawler(BaseCrawler):
         self.app = None
 
     def crawl_url(
-            self,
-            url: str,
-            max_depth: Optional[int] = None,
-            limit: Optional[int] = None,
-            allow_backward_links: Optional[bool] = None
+        self,
+        url: str,
+        max_depth: Optional[int] = None,
+        limit: Optional[int] = None,
+        allow_backward_links: Optional[bool] = None,
     ) -> List[Document]:
         """
         Dynamically crawls a URL using either scrape_url or crawl_url:
@@ -40,9 +42,9 @@ class FireCrawlCrawler(BaseCrawler):
         # scrape single page
         if max_depth is None and limit is None and allow_backward_links is None:
             scrape_result = self.app.scrape_url(url=url, params={"formats": ["markdown"]})
-            markdown_content = scrape_result.get('markdown', '')
-            metadata = scrape_result.get('metadata', {})
-            metadata['reference'] = url
+            markdown_content = scrape_result.get("markdown", "")
+            metadata = scrape_result.get("metadata", {})
+            metadata["reference"] = url
             return [Document(page_content=markdown_content, metadata=metadata)]
 
         # else, crawl multiple pages based on users' input params
@@ -51,17 +53,19 @@ class FireCrawlCrawler(BaseCrawler):
             "scrapeOptions": {"formats": ["markdown"]},
             "limit": limit if limit is not None else 20,
             "maxDepth": max_depth if max_depth is not None else 2,
-            "allowBackwardLinks": allow_backward_links if allow_backward_links is not None else False
+            "allowBackwardLinks": allow_backward_links
+            if allow_backward_links is not None
+            else False,
         }
 
         crawl_status = self.app.crawl_url(url=url, params=crawl_params)
-        data = crawl_status.get('data', [])
+        data = crawl_status.get("data", [])
 
         documents = []
         for item in data:
-            markdown_content = item.get('markdown', '')
-            metadata = item.get('metadata', {})
-            metadata['reference'] = metadata.get("url", url)
+            markdown_content = item.get("markdown", "")
+            metadata = item.get("metadata", {})
+            metadata["reference"] = metadata.get("url", url)
             documents.append(Document(page_content=markdown_content, metadata=metadata))
 
         return documents

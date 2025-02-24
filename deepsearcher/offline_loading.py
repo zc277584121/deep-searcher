@@ -3,10 +3,9 @@ from typing import List, Union
 
 from tqdm import tqdm
 
-from deepsearcher.loader.splitter import split_docs_to_chunks
-
 # from deepsearcher.configuration import embedding_model, vector_db, file_loader
 from deepsearcher import configuration
+from deepsearcher.loader.splitter import split_docs_to_chunks
 
 
 def load_from_local_files(

@@ -1,8 +1,9 @@
 import os
-import requests
 from typing import List
 
+import requests
 from langchain_core.documents import Document
+
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 
 
@@ -17,7 +18,7 @@ class JinaCrawler(BaseCrawler):
         jina_url = f"https://r.jina.ai/{url}"
         headers = {
             "Authorization": f"Bearer {self.jina_api_token}",
-            "X-Return-Format": "markdown"
+            "X-Return-Format": "markdown",
         }
 
         response = requests.get(jina_url, headers=headers)
@@ -27,7 +28,7 @@ class JinaCrawler(BaseCrawler):
         metadata = {
             "reference": url,
             "status_code": response.status_code,
-            "headers": dict(response.headers)
+            "headers": dict(response.headers),
         }
 
         return [Document(page_content=markdown_content, metadata=metadata)]

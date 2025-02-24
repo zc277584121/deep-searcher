@@ -1,10 +1,10 @@
-import ast
 from typing import List, Tuple
+
+from deepsearcher import configuration
 
 # from deepsearcher.configuration import llm
 from deepsearcher.agent.prompt import get_reflect_prompt
 from deepsearcher.vector_db.base import RetrievalResult
-from deepsearcher import configuration
 
 
 def generate_gap_queries(

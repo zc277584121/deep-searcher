@@ -5,6 +5,7 @@ import numpy as np
 
 from deepsearcher.loader.splitter import Chunk
 
+
 class RetrievalResult:
     def __init__(
         self,
@@ -23,6 +24,7 @@ class RetrievalResult:
     def __repr__(self):
         return f"RetrievalResult(score={self.score}, embedding={self.embedding}, text={self.text}, reference={self.reference}), metadata={self.metadata}"
 
+
 def deduplicate_results(results: List[RetrievalResult]) -> List[RetrievalResult]:
     all_text_set = set()
     deduplicated_results = []
@@ -32,6 +34,7 @@ def deduplicate_results(results: List[RetrievalResult]) -> List[RetrievalResult]
             deduplicated_results.append(result)
     return deduplicated_results
 
+
 class CollectionInfo:
     def __init__(self, collection_name: str, description: str):
         self.collection_name = collection_name
@@ -40,23 +43,33 @@ class CollectionInfo:
 
 class BaseVectorDB(ABC):
     def __init__(
-            self,
-            default_collection: str = "deepsearcher",
-            *args,
-            **kwargs,
+        self,
+        default_collection: str = "deepsearcher",
+        *args,
+        **kwargs,
     ):
         self.default_collection = default_collection
 
     @abstractmethod
-    def init_collection(self, dim: int, collection: str, description: str, force_new_collection=False, *args, **kwargs):
+    def init_collection(
+        self,
+        dim: int,
+        collection: str,
+        description: str,
+        force_new_collection=False,
+        *args,
+        **kwargs,
+    ):
         pass
-    
+
     @abstractmethod
     def insert_data(self, collection: str, chunks: List[Chunk], *args, **kwargs):
         pass
-    
+
     @abstractmethod
-    def search_data(self, collection: str, vector: Union[np.array, List[float]], *args, **kwargs) -> List[RetrievalResult]:
+    def search_data(
+        self, collection: str, vector: Union[np.array, List[float]], *args, **kwargs
+    ) -> List[RetrievalResult]:
         pass
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:

@@ -1,7 +1,8 @@
 from typing import List
-from deepsearcher.loader.file_loader.base import BaseLoader
+
 from langchain_core.documents import Document
 
+from deepsearcher.loader.file_loader.base import BaseLoader
 
 
 class PDFLoader(BaseLoader):
@@ -10,6 +11,7 @@ class PDFLoader(BaseLoader):
 
     def load_file(self, file_path: str) -> List[Document]:
         import pdfplumber
+
         if file_path.endswith(".pdf"):
             with pdfplumber.open(file_path) as file:
                 page_content = "\n\n".join([page.extract_text() for page in file.pages])

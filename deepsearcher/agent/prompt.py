@@ -17,9 +17,9 @@ When you return, you can ONLY return a python list of str, WITHOUT any other add
 
 
 def get_reflect_prompt(
-   question: str,
-   mini_questions: List[str],
-   mini_chuncks: List[str],
+    question: str,
+    mini_questions: List[str],
+    mini_chuncks: List[str],
 ):
     mini_chunk_str = ""
     for i, chunk in enumerate(mini_chuncks):
@@ -33,16 +33,15 @@ If the original query is to write a report, then you prefer to generate some fur
     Related Chunks: 
     {mini_chunk_str}
     """
-   
-    
+
     footer = """Respond exclusively in valid List of str format without any other text."""
     return reflect_prompt + footer
 
 
 def get_final_answer_prompt(
-   question: str, 
-   mini_questions: List[str],
-   mini_chuncks: List[str],
+    question: str,
+    mini_questions: List[str],
+    mini_chuncks: List[str],
 ):
     mini_chunk_str = ""
     for i, chunk in enumerate(mini_chuncks):

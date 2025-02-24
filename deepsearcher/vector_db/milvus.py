@@ -1,10 +1,11 @@
-import numpy as np
 from typing import List, Optional, Union
 
+import numpy as np
+from pymilvus import DataType, MilvusClient
+
 from deepsearcher.loader.splitter import Chunk
-from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
 from deepsearcher.tools import log
-from pymilvus import MilvusClient, DataType
+from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
 
 
 class Milvus(BaseVectorDB):
@@ -51,9 +52,7 @@ class Milvus(BaseVectorDB):
             schema.add_field("id", DataType.INT64, is_primary=True)
             schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
             schema.add_field("text", DataType.VARCHAR, max_length=text_max_length)
-            schema.add_field(
-                "reference", DataType.VARCHAR, max_length=reference_max_length
-            )
+            schema.add_field("reference", DataType.VARCHAR, max_length=reference_max_length)
             schema.add_field("metadata", DataType.JSON)
             index_params = self.client.prepare_index_params()
             index_params.add_index(field_name="embedding", metric_type=metric_type)
@@ -93,9 +92,7 @@ class Milvus(BaseVectorDB):
                 embeddings, texts, references, metadatas
             )
         ]
-        batch_datas = [
-            datas[i : i + batch_size] for i in range(0, len(datas), batch_size)
-        ]
+        batch_datas = [datas[i : i + batch_size] for i in range(0, len(datas), batch_size)]
         try:
             for batch_data in batch_datas:
                 self.client.insert(collection_name=collection, data=batch_data)

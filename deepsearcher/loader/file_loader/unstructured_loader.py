@@ -1,9 +1,12 @@
 import os
 import shutil
 from typing import List
+
 from langchain_core.documents import Document
+
 from deepsearcher.loader.file_loader.base import BaseLoader
 from deepsearcher.tools import log
+
 
 class UnstructuredLoader(BaseLoader):
     def __init__(self):
@@ -13,12 +16,12 @@ class UnstructuredLoader(BaseLoader):
         os.makedirs(self.directory_with_results)
 
     def load_pipeline(self, input_path: str) -> List[Document]:
-        from unstructured_ingest.v2.pipeline.pipeline import Pipeline
         from unstructured_ingest.v2.interfaces import ProcessorConfig
+        from unstructured_ingest.v2.pipeline.pipeline import Pipeline
         from unstructured_ingest.v2.processes.connectors.local import (
-            LocalIndexerConfig,
-            LocalDownloaderConfig,
             LocalConnectionConfig,
+            LocalDownloaderConfig,
+            LocalIndexerConfig,
             LocalUploaderConfig,
         )
         from unstructured_ingest.v2.processes.partitioner import PartitionerConfig
@@ -71,5 +74,5 @@ class UnstructuredLoader(BaseLoader):
         return self.load_pipeline(directory)
 
     @property
-    def supported_file_types(self) -> List[str]:  #TODO
+    def supported_file_types(self) -> List[str]:  # TODO
         return ["pdf"]

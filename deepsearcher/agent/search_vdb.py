@@ -1,12 +1,9 @@
-import ast
 from typing import List
-
-from deepsearcher.agent.prompt import get_vector_db_search_prompt
 
 # from deepsearcher.configuration import llm, embedding_model, vector_db
 from deepsearcher import configuration
+from deepsearcher.agent.prompt import get_vector_db_search_prompt
 from deepsearcher.tools import log
-
 
 RERANK_PROMPT = """Based on the query questions and the retrieved chunk, to determine whether the chunk is helpful in answering any of the query question, you can only return "YES" or "NO", without any other information.
 Query Questions: {query}
@@ -33,9 +30,7 @@ async def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
             for collection_info in collection_infos
         ],
     )
-    chat_response = llm.chat(
-        messages=[{"role": "user", "content": vector_db_search_prompt}]
-    )
+    chat_response = llm.chat(messages=[{"role": "user", "content": vector_db_search_prompt}])
     llm_collections = llm.literal_eval(chat_response.content)
     collection_2_query = {}
     consume_tokens += chat_response.total_tokens
@@ -55,9 +50,7 @@ async def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
     )
     all_retrieved_results = []
     for collection, col_query in collection_2_query.items():
-        log.color_print(
-            f"<search> Search [{col_query}] in [{collection}]...  </search>\n"
-        )
+        log.color_print(f"<search> Search [{col_query}] in [{collection}]...  </search>\n")
         retrieved_results = vector_db.search_data(
             collection=collection, vector=embedding_model.embed_query(col_query)
         )

@@ -34,15 +34,11 @@ class VoyageEmbedding(BaseEmbedding):
         """
         input_type (`str`): "query" or "document" for retrieval case.
         """
-        embeddings = self.vo.embed(
-            [text], model=self.model, input_type="query"
-        )
+        embeddings = self.vo.embed([text], model=self.model, input_type="query")
         return embeddings.embeddings[0]
-    
+
     def embed_documents(self, texts: list[str]) -> List[List[float]]:
-        embeddings = self.vo.embed(
-            texts, model=self.model, input_type="document"
-        )
+        embeddings = self.vo.embed(texts, model=self.model, input_type="document")
         return embeddings.embeddings
 
     @property

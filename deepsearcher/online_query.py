@@ -1,24 +1,22 @@
-from typing import Tuple, List
-
-from deepsearcher.agent import (
-    generate_sub_queries,
-    generate_gap_queries,
-    generate_final_answer,
-)
-from deepsearcher.agent.search_vdb import search_chunks_from_vectordb
-from deepsearcher.vector_db.base import deduplicate_results, RetrievalResult
+import asyncio
+from typing import List, Tuple
 
 # from deepsearcher.configuration import vector_db, embedding_model, llm
 from deepsearcher import configuration
+from deepsearcher.agent import (
+    generate_final_answer,
+    generate_gap_queries,
+    generate_sub_queries,
+)
+from deepsearcher.agent.search_vdb import search_chunks_from_vectordb
 from deepsearcher.tools import log
-import asyncio
+from deepsearcher.vector_db.base import RetrievalResult, deduplicate_results
 
 
 # Add a wrapper function to support synchronous calls
-def query(
-    original_query: str, max_iter: int = 3
-) -> Tuple[str, List[RetrievalResult], int]:
+def query(original_query: str, max_iter: int = 3) -> Tuple[str, List[RetrievalResult], int]:
     return asyncio.run(async_query(original_query, max_iter))
+
 
 async def async_query(
     original_query: str, max_iter: int = 3
@@ -70,8 +68,7 @@ async def async_retrieve(
 
         # Create all search tasks
         search_tasks = [
-            search_chunks_from_vectordb(query, sub_gap_queries)
-            for query in sub_gap_queries
+            search_chunks_from_vectordb(query, sub_gap_queries) for query in sub_gap_queries
         ]
         # Execute all tasks in parallel and wait for results
         search_results = await asyncio.gather(*search_tasks)
@@ -92,9 +89,7 @@ async def async_retrieve(
         )
         total_tokens += consumed_token
         if not sub_gap_queries:
-            log.color_print(
-                "<think> No new search queries were generated. Exiting. </think>\n"
-            )
+            log.color_print("<think> No new search queries were generated. Exiting. </think>\n")
             break
         else:
             log.color_print(
@@ -106,17 +101,13 @@ async def async_retrieve(
     return all_search_res, all_sub_queries, total_tokens
 
 
-def naive_retrieve(
-    query: str, collection: str = None, top_k=10
-) -> List[RetrievalResult]:
+def naive_retrieve(query: str, collection: str = None, top_k=10) -> List[RetrievalResult]:
     vector_db = configuration.vector_db
     embedding_model = configuration.embedding_model
 
     if not collection:
         retrieval_res = []
-        collections = [
-            col_info.collection_name for col_info in vector_db.list_collections()
-        ]
+        collections = [col_info.collection_name for col_info in vector_db.list_collections()]
         for collection in collections:
             retrieval_res_col = vector_db.search_data(
                 collection=collection,
