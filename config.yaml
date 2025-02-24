@@ -50,6 +50,11 @@ provide_settings:
 #      model: "amazon.titan-embed-text-v2:0"
 ##      aws_access_key_id: ""  # Uncomment to override the `AWS_ACCESS_KEY_ID` set in the environment variable
 ##      aws_secret_access_key: ""  # Uncomment to override the `AWS_SECRET_ACCESS_KEY` set in the environment variable
+    
+#    provider: "SiliconflowEmbedding"
+#    config:
+#      model: "BAAI/bge-m3"
+# .    api_key: ""   # Uncomment to override the `SILICONFLOW_API_KEY` set in the environment variable   
 
   file_loader:
     provider: "PDFLoader"

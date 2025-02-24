@@ -19,7 +19,11 @@ class VoyageEmbedding(BaseEmbedding):
         if "model_name" in kwargs and (not model or model == "voyage-3"):
             model = kwargs.pop("model_name")
         self.model = model
-        self.voyageai_api_key = os.getenv("VOYAGE_API_KEY")
+        if "api_key" in kwargs:
+            api_key = kwargs.pop("api_key")
+        else:
+            api_key = os.getenv("VOYAGE_API_KEY")
+        self.voyageai_api_key = api_key
 
         import voyageai
 
