@@ -1,6 +1,6 @@
 # DeepSearcher
 
-DeepSearcher combines reasoning LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3 etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
+DeepSearcher combines reasoning LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 3.7 Sonnet, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
 ![Architecture](./assets/pic/deep-searcher-arch.png)
 
@@ -47,7 +47,7 @@ config = Configuration()
 # Customize your config here,
 # more configuration see the Configuration Details section below.
 config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o-mini"})
-config.set_provider_config("embedding"， "OpenAIEmbedding", {"model", "text-embedding-ada-002")
+config.set_provider_config("embedding", "OpenAIEmbedding", {"model", "text-embedding-ada-002")
 init_config(config = config)
 
 # Load your local data
@@ -101,6 +101,13 @@ result = query("Write a report about xxx.") # Your question here
     <p> Make sure you have prepared your XAI API KEY as an env variable <code>XAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("llm", "Grok", {"model": "grok-2-latest"})</code></pre>
     <p> More details about Grok: https://docs.x.ai/docs/overview#featured-models </p>
+</details>
+
+<details>
+  <summary>Example (Claude)</summary>
+    <p> Make sure you have prepared your ANTHROPIC API KEY as an env variable <code>ANTHROPIC_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("llm", "Anthropic", {"model": "claude-3-5-sonnet-latest"})</code></pre>
+    <p> More details about Anthropic Claude: https://docs.anthropic.com/en/home </p>
 </details>
 
 <details>
@@ -320,6 +327,7 @@ nest_asyncio.apply()
 - [OpenAI](https://platform.openai.com/docs/models) (`OPENAI_API_KEY` env variable required)
 - [DeepSeek](https://api-docs.deepseek.com/) (`DEEPSEEK_API_KEY` env variable required)
 - [Grok 3](https://x.ai/blog/grok-3) (Coming soon!) (`XAI_API_KEY` env variable required)
+- [Anthropic Claude](https://docs.anthropic.com/en/home) (`ANTHROPIC_API_KEY` env variable required)
 - [SiliconFlow Inference Service](https://docs.siliconflow.cn/en/userguide/introduction) (`SILICONFLOW_API_KEY` env variable required)
 - [TogetherAI Inference Service](https://docs.together.ai/docs/introduction) (`TOGETHER_API_KEY` env variable required)
 - [Google Gemini](https://ai.google.dev/gemini-api/docs) (`GEMINI_API_KEY` env variable required)

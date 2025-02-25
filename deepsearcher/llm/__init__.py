@@ -1,3 +1,4 @@
+from .anthropic_llm import Anthropic
 from .azure_openai import AzureOpenAI
 from .deepseek import DeepSeek
 from .gemini import Gemini
@@ -14,4 +15,5 @@ __all__ = [
     "AzureOpenAI",
     "Gemini",
     "Grok",
+    "Anthropic",
 ]
