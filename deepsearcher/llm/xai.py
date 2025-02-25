@@ -4,7 +4,7 @@ from typing import Dict, List
 from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
-class Grok(BaseLLM):
+class XAI(BaseLLM):
     """
     https://docs.x.ai/docs/overview#quick-reference
     """

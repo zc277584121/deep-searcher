@@ -171,7 +171,7 @@ def evaluate(
 
 
 def main_eval():
-    parser = argparse.ArgumentParser(prog="evaluation", description="Deep Searcher evaluation.")
+    parser = argparse.ArgumentParser(prog="evaluate", description="Deep Searcher evaluation.")
     parser.add_argument(
         "--dataset",
         type=str,
