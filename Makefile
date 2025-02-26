@@ -1,5 +1,5 @@
 lint:
-	ruff format --check
+	ruff format --diff
 	ruff check
 
 format:
