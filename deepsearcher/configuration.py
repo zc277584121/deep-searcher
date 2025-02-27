@@ -3,6 +3,8 @@ from typing import Literal
 
 import yaml
 
+from deepsearcher.agent import ChainOfRAG, DeepSearch, NaiveRAG
+from deepsearcher.agent.rag_router import RAGRouter
 from deepsearcher.embedding.base import BaseEmbedding
 from deepsearcher.llm.base import BaseLLM
 from deepsearcher.loader.file_loader.base import BaseLoader
@@ -91,13 +93,53 @@ embedding_model: BaseEmbedding = None
 file_loader: BaseLoader = None
 vector_db: BaseVectorDB = None
 web_crawler: BaseCrawler = None
+default_searcher: RAGRouter = None
+naive_rag: NaiveRAG = None
 
 
 def init_config(config: Configuration):
-    global module_factory, llm, embedding_model, file_loader, vector_db, web_crawler
+    global \
+        module_factory, \
+        llm, \
+        embedding_model, \
+        file_loader, \
+        vector_db, \
+        web_crawler, \
+        default_searcher, \
+        naive_rag
     module_factory = ModuleFactory(config)
     llm = module_factory.create_llm()
     embedding_model = module_factory.create_embedding()
     file_loader = module_factory.create_file_loader()
     web_crawler = module_factory.create_web_crawler()
     vector_db = module_factory.create_vector_db()
+
+    default_searcher = RAGRouter(
+        llm=llm,
+        rag_agents=[
+            DeepSearch(
+                llm=llm,
+                embedding_model=embedding_model,
+                vector_db=vector_db,
+                max_iter=config.query_settings["max_iter"],
+                route_collection=True,
+                text_window_splitter=True,
+            ),
+            ChainOfRAG(
+                llm=llm,
+                embedding_model=embedding_model,
+                vector_db=vector_db,
+                max_iter=config.query_settings["max_iter"],
+                route_collection=True,
+                text_window_splitter=True,
+            ),
+        ],
+    )
+    naive_rag = NaiveRAG(
+        llm=llm,
+        embedding_model=embedding_model,
+        vector_db=vector_db,
+        top_k=10,
+        route_collection=True,
+        text_window_splitter=True,
+    )

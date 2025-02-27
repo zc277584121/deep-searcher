@@ -31,4 +31,4 @@ class PPIO(BaseLLM):
         return ChatResponse(
             content=completion.choices[0].message.content,
             total_tokens=completion.usage.total_tokens,
-        ) 
+        )

@@ -20,7 +20,7 @@ def main():
     parser = argparse.ArgumentParser(prog="deepsearcher", description="Deep Searcher.")
     ## Arguments of query
     parser.add_argument("--query", type=str, default="", help="query question or search topic.")
-    parser.add_argument(
+    parser.add_argument(  # TODO: Will move this init arg into config
         "--max_iter",
         type=int,
         default=3,
