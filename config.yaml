@@ -36,6 +36,11 @@ provide_settings:
 ##      azure_endpoint: "xxxx"  # Uncomment to override the `AZURE_OPENAI_ENDPOINT` set in the environment variable
 ##      api_key: "xxxx"  # Uncomment to override the `AZURE_OPENAI_KEY` set in the environment variable
 
+#    provider: "Ollama"
+#    config:
+#      model: "qwen2.5:3b"
+##      base_url: ""
+
   embedding:
     provider: "OpenAIEmbedding"
     config:

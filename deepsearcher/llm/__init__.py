@@ -2,6 +2,7 @@ from .anthropic_llm import Anthropic
 from .azure_openai import AzureOpenAI
 from .deepseek import DeepSeek
 from .gemini import Gemini
+from .ollama import Ollama
 from .openai_llm import OpenAI
 from .ppio import PPIO
 from .siliconflow import SiliconFlow
@@ -18,4 +19,5 @@ __all__ = [
     "Gemini",
     "XAI",
     "Anthropic",
+    "Ollama",
 ]
