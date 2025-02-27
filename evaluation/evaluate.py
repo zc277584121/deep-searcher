@@ -10,6 +10,7 @@ import logging
 import os
 import time
 import warnings
+from collections import defaultdict
 from typing import List, Tuple
 
 import pandas as pd
@@ -32,11 +33,12 @@ k_list = [2, 5]
 
 def _deepsearch_retrieve_titles(
     question: str, retry_num: int = 4, base_wait_time: int = 4
-) -> Tuple[List[str], bool]:
+) -> Tuple[List[str], int, bool]:
     retrieved_results = []
+    consume_tokens = 0
     for i in range(retry_num):
         try:
-            retrieved_results, _, _ = retrieve(question)
+            retrieved_results, _, consume_tokens = retrieve(question)
             break
         except Exception:
             wait_time = base_wait_time * (2**i)
@@ -51,7 +53,7 @@ def _deepsearch_retrieve_titles(
         print("Pipeline error, no retrieved results.")
         retrieved_titles = []
         fail = True
-    return retrieved_titles, fail
+    return retrieved_titles, consume_tokens, fail
 
 
 def _naive_retrieve_titles(question: str) -> List[str]:
@@ -102,6 +104,7 @@ def evaluate(
     eval_output_subdir = os.path.join(output_root, flag)
     os.makedirs(eval_output_subdir, exist_ok=True)
     csv_file_path = os.path.join(eval_output_subdir, "details.csv")
+    statistics_file_path = os.path.join(eval_output_subdir, "statistics.json")
 
     data_with_gt_file_path = os.path.join(current_dir, f"../examples/data/{dataset}.json")
     data_with_gt = json.load(open(data_with_gt_file_path, "r"))
@@ -114,16 +117,24 @@ def evaluate(
 
     start_ind = 0
     existing_df = pd.DataFrame()
+    existing_statistics = defaultdict(dict)
+    existing_token_usage = 0
     if os.path.exists(csv_file_path):
         existing_df = pd.read_csv(csv_file_path)
         start_ind = len(existing_df)
         print(f"Loading results from {csv_file_path}, start_index = {start_ind}")
 
+    if os.path.exists(statistics_file_path):
+        existing_statistics = json.load(open(statistics_file_path, "r"))
+        print(
+            f"Loading statistics from {statistics_file_path}, will recalculate the statistics based on both new and existing results."
+        )
+        existing_token_usage = existing_statistics["deepsearcher"]["token_usage"]
     for sample_idx, sample in enumerate(data_with_gt[start_ind:end_ind]):
         global_idx = sample_idx + start_ind
         question = sample["question"]
 
-        retrieved_titles, fail = _deepsearch_retrieve_titles(question)
+        retrieved_titles, consume_tokens, fail = _deepsearch_retrieve_titles(question)
         retrieved_titles_naive = _naive_retrieve_titles(question)
 
         if fail:
@@ -166,6 +177,11 @@ def evaluate(
             ) / len(existing_df)
         _print_recall_line(average_recall, pre_str="Average recall of DeepSearcher: ")
         _print_recall_line(average_recall_naive, pre_str="Average recall of naive RAG   : ")
+        existing_token_usage += consume_tokens
+        existing_statistics["deepsearcher"]["average_recall"] = average_recall
+        existing_statistics["deepsearcher"]["token_usage"] = existing_token_usage
+        existing_statistics["naive_rag"]["average_recall"] = average_recall_naive
+        json.dump(existing_statistics, open(statistics_file_path, "w"), indent=4)
         print("")
     print("Finish results to save.")
 
