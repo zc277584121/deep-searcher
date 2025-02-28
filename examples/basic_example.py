@@ -30,5 +30,5 @@ question = "Write a report comparing Milvus with other vector databases."
 # query(question)
 
 # get consumed tokens, about: 2.5~3w tokens when using openai gpt-4o model
-_, _, consumed_token = query(question)
+_, _, consumed_token = query(question, max_iter=1)
 print(f"Consumed tokens: {consumed_token}")

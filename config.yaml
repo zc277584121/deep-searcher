@@ -46,6 +46,8 @@ provide_settings:
     config:
       model: "text-embedding-ada-002"
 #      api_key: ""  # Uncomment to override the `OPENAI_API_KEY` set in the environment variable
+#      base_url: "" # Uncomment to override the `OPENAI_BASE_URL` set in the environment variable
+#      dimension: 1536 # Uncomment to customize the embedding dimension 
 
 
 #    provider: "MilvusEmbedding"
