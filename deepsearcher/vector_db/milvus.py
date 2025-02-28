@@ -114,7 +114,7 @@ class Milvus(BaseVectorDB):
                 collection_name=collection,
                 data=[vector],
                 limit=top_k,
-                output_fields=["*"],
+                output_fields=["embedding", "text", "reference", "metadata"],
                 timeout=10,
             )
 
