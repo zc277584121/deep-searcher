@@ -42,7 +42,7 @@ class BaseLLM(ABC):
                 else:
                     raise ValueError("Invalid code block format")
             result = ast.literal_eval(response_content.strip())
-        except ValueError:
+        except Exception:
             matches = re.findall(r"(\[.*?\]|\{.*?\})", response_content, re.DOTALL)
 
             if len(matches) != 1:

@@ -44,7 +44,15 @@ class RAGRouter(RAGAgent):
         )
         prompt = RAG_ROUTER_PROMPT.format(query=query, description_str=description_str)
         chat_response = self.llm.chat(messages=[{"role": "user", "content": prompt}])
-        selected_agent_index = int(chat_response.content) - 1
+        try:
+            selected_agent_index = int(chat_response.content) - 1
+        except ValueError:
+            # In some reasoning LLM, the output is not a number, but a explaination string with a number in the end.
+            log.warning(
+                "Parse int failed in RAGRouter, but will try to find the last digit as fallback."
+            )
+            selected_agent_index = int(self.find_last_digit(chat_response.content)) - 1
+
         selected_agent = self.rag_agents[selected_agent_index]
         log.color_print(
             f"<think> Select agent [{selected_agent.__class__.__name__}] to answer the query [{query}] </think>\n"
@@ -60,3 +68,9 @@ class RAGRouter(RAGAgent):
         agent, n_token_router = self._route(query)
         answer, retrieved_results, n_token_retrieval = agent.query(query, **kwargs)
         return answer, retrieved_results, n_token_router + n_token_retrieval
+
+    def find_last_digit(self, string):
+        for char in reversed(string):
+            if char.isdigit():
+                return char
+        raise ValueError("No digit found in the string")
