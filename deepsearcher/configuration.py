@@ -12,7 +12,7 @@ from deepsearcher.loader.web_crawler.base import BaseCrawler
 from deepsearcher.vector_db.base import BaseVectorDB
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_CONFIG_YAML_PATH = os.path.join(current_dir, "..", "config.yaml")
+DEFAULT_CONFIG_YAML_PATH = os.path.join(current_dir, "config.yaml")
 
 FeatureType = Literal["llm", "embedding", "file_loader", "web_crawler", "vector_db"]
 
