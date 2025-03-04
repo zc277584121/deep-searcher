@@ -32,6 +32,8 @@ def load_from_local_files(
         paths_or_directory = [paths_or_directory]
     all_docs = []
     for path in tqdm(paths_or_directory, desc="Loading files"):
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Error: File or directory '{path}' does not exist.")
         if os.path.isdir(path):
             docs = file_loader.load_directory(path)
         else:
