@@ -68,10 +68,7 @@ def load_from_website(
         force_new_collection=force_new_collection,
     )
 
-    all_docs = []
-    for url in tqdm(urls, desc="Loading from websites"):
-        docs = web_crawler.crawl_url(url, **crawl_kwargs)
-        all_docs.extend(docs)
+    all_docs = web_crawler.crawl_urls(urls, **crawl_kwargs)
 
     chunks = split_docs_to_chunks(all_docs)
     chunks = embedding_model.embed_chunks(chunks)

@@ -14,3 +14,12 @@ class BaseCrawler(ABC):
         # In the metadata, it's recommended to include the reference to the url.
         # e.g.
         # return [Document(page_content=..., metadata={"reference": "www.abc.com/page1.html"})]
+
+    def crawl_urls(self, urls: List[str], **crawl_kwargs) -> List[Document]:
+        """
+        Crawl multiple URLs and return a list of Document objects.
+        """
+        documents = []
+        for url in urls:
+            documents.extend(self.crawl_url(url, **crawl_kwargs))
+        return documents

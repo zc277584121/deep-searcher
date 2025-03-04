@@ -238,7 +238,7 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (Crawl4AI)</summary>
     <p> Make sure you have run <code>crawl4ai-setup</code> in your environment.</p>
-    <pre><code>config.set_provider_config("web_crawler", "Crawl4AICrawler", {})</code></pre>
+    <pre><code>config.set_provider_config("web_crawler", "Crawl4AICrawler", {"browser_config": {"headless": True, "verbose": True}})</code></pre>
     <p> You need to install crawl4ai before running, execute: <code>pip install crawl4ai</code>. More details about Crawl4AI: https://docs.crawl4ai.com/ </p>
 </details>
 

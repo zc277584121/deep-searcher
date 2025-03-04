@@ -88,9 +88,16 @@ provide_settings:
     provider: "FireCrawlCrawler"
     config: {}
 
-#    provider: "Crawl4AICrawler"
-#    config: {}
-
+    # provider: "Crawl4AICrawler"
+    # config: # Uncomment to custom browser configuration for Crawl4AI
+    #   browser_config:
+    #     headless: false
+    #     proxy: "http://127.0.0.1:7890"
+    #     chrome_channel: "chrome"
+    #     verbose: true
+    #     viewport_width: 800
+    #     viewport_height: 600
+    
 #    provider: "JinaCrawler"
 #    config: {}
 
