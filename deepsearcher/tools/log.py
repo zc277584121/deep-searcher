@@ -85,8 +85,8 @@ def error(message):
 
 def critical(message):
     """critical log"""
-    if dev_mode:
-        dev_logger.critical(message)
+    dev_logger.critical(message)
+    raise RuntimeError(message)
 
 
 def color_print(message, **kwargs):
