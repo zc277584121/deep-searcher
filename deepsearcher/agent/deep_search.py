@@ -113,9 +113,13 @@ class DeepSearch(RAGAgent):
             retrieved_results = self.vector_db.search_data(
                 collection=collection, vector=query_vector
             )
-
+            if not retrieved_results or len(retrieved_results) == 0:
+                log.color_print(
+                    f"<search> No relevant document chunks found in '{collection}'! </search>\n"
+                )
+                continue
             accepted_chunk_num = 0
-            references = []
+            references = set()
             for retrieved_result in retrieved_results:
                 chat_response = self.llm.chat(
                     messages=[
@@ -123,19 +127,28 @@ class DeepSearch(RAGAgent):
                             "role": "user",
                             "content": RERANK_PROMPT.format(
                                 query=[query] + sub_queries,
-                                retrieved_chunk=retrieved_result.text,
+                                retrieved_chunk=f"<chunk>{retrieved_result.text}</chunk>",
                             ),
                         }
                     ]
                 )
                 consume_tokens += chat_response.total_tokens
-                if chat_response.content.startswith("YES"):
+                response_content = chat_response.content.strip()
+                # strip the reasoning text if exists
+                if "<think>" in response_content and "</think>" in response_content:
+                    end_of_think = response_content.find("</think>") + len("</think>")
+                    response_content = response_content[end_of_think:].strip()
+                if "YES" in response_content and "NO" not in response_content:
                     all_retrieved_results.append(retrieved_result)
                     accepted_chunk_num += 1
-                    references.append(retrieved_result.reference)
+                    references.add(retrieved_result.reference)
             if accepted_chunk_num > 0:
                 log.color_print(
-                    f"<search> Accept {accepted_chunk_num} document chunk(s) from references: {references} </search>\n"
+                    f"<search> Accept {accepted_chunk_num} document chunk(s) from references: {list(references)} </search>\n"
+                )
+            else:
+                log.color_print(
+                    f"<search> No document chunk accepted from '{collection}'! </search>\n"
                 )
         return all_retrieved_results, consume_tokens
 
@@ -145,7 +158,9 @@ class DeepSearch(RAGAgent):
         reflect_prompt = REFLECT_PROMPT.format(
             question=original_query,
             mini_questions=all_sub_queries,
-            mini_chunk_str=self._format_chunk_texts([chunk.text for chunk in all_chunks]),
+            mini_chunk_str=self._format_chunk_texts([chunk.text for chunk in all_chunks])
+            if len(all_chunks) > 0
+            else "NO RELATED CHUNKS FOUND.",
         )
         chat_response = self.llm.chat([{"role": "user", "content": reflect_prompt}])
         response_content = chat_response.content
@@ -196,14 +211,16 @@ class DeepSearch(RAGAgent):
             search_res_from_vectordb = deduplicate_results(search_res_from_vectordb)
             # search_res_from_internet = deduplicate_results(search_res_from_internet)
             all_search_res.extend(search_res_from_vectordb + search_res_from_internet)
-
+            if iter == self.max_iter - 1:
+                log.color_print("<think> Exceeded maximum iterations. Exiting. </think>\n")
+                break
             ### REFLECTION & GET GAP QUERIES ###
             log.color_print("<think> Reflecting on the search results... </think>\n")
             sub_gap_queries, consumed_token = self._generate_gap_queries(
                 original_query, all_sub_queries, all_search_res
             )
             total_tokens += consumed_token
-            if not sub_gap_queries:
+            if not sub_gap_queries or len(sub_gap_queries) == 0:
                 log.color_print("<think> No new search queries were generated. Exiting. </think>\n")
                 break
             else:
@@ -218,6 +235,8 @@ class DeepSearch(RAGAgent):
 
     def query(self, query: str, **kwargs) -> Tuple[str, List[RetrievalResult], int]:
         all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query)
+        if not all_retrieved_results or len(all_retrieved_results) == 0:
+            return f"No relevant information found for query '{query}'.", [], n_token_retrieval
         all_sub_queries = additional_info["all_sub_queries"]
         chunk_texts = []
         for chunk in all_retrieved_results:

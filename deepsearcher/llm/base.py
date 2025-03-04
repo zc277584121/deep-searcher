@@ -25,7 +25,7 @@ class BaseLLM(ABC):
         response_content = response_content.strip()
 
         # remove content between <think> and </think>, especial for DeepSeek reasoning model
-        if "<think>" and "</think>" in response_content:
+        if "<think>" in response_content and "</think>" in response_content:
             end_of_think = response_content.find("</think>") + len("</think>")
             response_content = response_content[end_of_think:]
 
