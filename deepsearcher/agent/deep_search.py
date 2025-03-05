@@ -167,11 +167,12 @@ class DeepSearch(RAGAgent):
         return self.llm.literal_eval(response_content), chat_response.total_tokens
 
     def retrieve(self, original_query: str, **kwargs) -> Tuple[List[RetrievalResult], int, dict]:
-        return asyncio.run(self.async_retrieve(original_query))
+        return asyncio.run(self.async_retrieve(original_query, **kwargs))
 
     async def async_retrieve(
         self, original_query: str, **kwargs
     ) -> Tuple[List[RetrievalResult], int, dict]:
+        max_iter = kwargs.pop("max_iter", self.max_iter)
         ### SUB QUERIES ###
         log.color_print(f"<query> {original_query} </query>\n")
         all_search_res = []
@@ -190,7 +191,7 @@ class DeepSearch(RAGAgent):
         all_sub_queries.extend(sub_queries)
         sub_gap_queries = sub_queries
 
-        for iter in range(self.max_iter):
+        for iter in range(max_iter):
             log.color_print(f">> Iteration: {iter + 1}\n")
             search_res_from_vectordb = []
             search_res_from_internet = []  # TODO
@@ -211,7 +212,7 @@ class DeepSearch(RAGAgent):
             search_res_from_vectordb = deduplicate_results(search_res_from_vectordb)
             # search_res_from_internet = deduplicate_results(search_res_from_internet)
             all_search_res.extend(search_res_from_vectordb + search_res_from_internet)
-            if iter == self.max_iter - 1:
+            if iter == max_iter - 1:
                 log.color_print("<think> Exceeded maximum iterations. Exiting. </think>\n")
                 break
             ### REFLECTION & GET GAP QUERIES ###
@@ -234,7 +235,7 @@ class DeepSearch(RAGAgent):
         return all_search_res, total_tokens, additional_info
 
     def query(self, query: str, **kwargs) -> Tuple[str, List[RetrievalResult], int]:
-        all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query)
+        all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query, **kwargs)
         if not all_retrieved_results or len(all_retrieved_results) == 0:
             return f"No relevant information found for query '{query}'.", [], n_token_retrieval
         all_sub_queries = additional_info["all_sub_queries"]

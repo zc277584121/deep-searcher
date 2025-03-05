@@ -168,10 +168,11 @@ class ChainOfRAG(RAGAgent):
         return supported_retrieved_results, token_usage
 
     def retrieve(self, query: str, **kwargs) -> Tuple[List[RetrievalResult], int, dict]:
+        max_iter = kwargs.pop("max_iter", self.max_iter)
         intermediate_contexts = []
         all_retrieved_results = []
         token_usage = 0
-        for iter in range(self.max_iter):
+        for iter in range(max_iter):
             log.color_print(f">> Iteration: {iter + 1}\n")
             followup_query, n_token0 = self._reflect_get_subquery(query, intermediate_contexts)
             intermediate_answer, retrieved_results, n_token1 = self._retrieve_and_answer(
@@ -192,7 +193,7 @@ class ChainOfRAG(RAGAgent):
         return all_retrieved_results, token_usage, additional_info
 
     def query(self, query: str, **kwargs) -> Tuple[str, List[RetrievalResult], int]:
-        all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query)
+        all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query, **kwargs)
         intermediate_context = additional_info["intermediate_context"]
         log.color_print(
             f"<think> Summarize answer from all {len(all_retrieved_results)} retrieved chunks... </think>\n"

@@ -7,14 +7,16 @@ from deepsearcher.vector_db.base import RetrievalResult
 
 def query(original_query: str, max_iter: int = 3) -> Tuple[str, List[RetrievalResult], int]:
     default_searcher = configuration.default_searcher
-    return default_searcher.query(original_query)
+    return default_searcher.query(original_query, max_iter=max_iter)
 
 
 def retrieve(
     original_query: str, max_iter: int = 3
 ) -> Tuple[List[RetrievalResult], List[str], int]:
     default_searcher = configuration.default_searcher
-    retrieved_results, consume_tokens, metadata = default_searcher.retrieve(original_query)
+    retrieved_results, consume_tokens, metadata = default_searcher.retrieve(
+        original_query, max_iter=max_iter
+    )
     return retrieved_results, [], consume_tokens
 
 
