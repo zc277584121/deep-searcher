@@ -210,6 +210,8 @@ class ChainOfRAG(RAGAgent):
                 }
             ]
         )
+        log.color_print("\n==== FINAL ANSWER====\n")
+        log.color_print(chat_response.content)
         return (
             chat_response.content,
             all_retrieved_results,
