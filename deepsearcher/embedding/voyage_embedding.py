@@ -37,7 +37,7 @@ class VoyageEmbedding(BaseEmbedding):
         embeddings = self.vo.embed([text], model=self.model, input_type="query")
         return embeddings.embeddings[0]
 
-    def embed_documents(self, texts: list[str]) -> List[List[float]]:
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
         embeddings = self.vo.embed(texts, model=self.model, input_type="document")
         return embeddings.embeddings
 
