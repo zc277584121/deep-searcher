@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 import warnings
 
 from deepsearcher.configuration import Configuration, init_config
@@ -15,13 +16,25 @@ warnings.simplefilter(action="ignore", category=FutureWarning)  # disable warnin
 
 
 def main():
+    if "--query" in sys.argv or "--load" in sys.argv:
+        print("\033[91m[Deprecated]\033[0m The use of '--query' and '--load' is deprecated.")
+        print("Please use:")
+        print("  deepsearcher query <your_query> --max_iter 3")
+        print(
+            "  deepsearcher load <your_local_path_or_url> --collection_name <your_collection_name> --collection_desc <your_collection_description>"
+        )
+        sys.exit(1)
+
     config = Configuration()  # Customize your config here
     init_config(config=config)
 
     parser = argparse.ArgumentParser(prog="deepsearcher", description="Deep Searcher.")
+    subparsers = parser.add_subparsers(dest="subcommand", title="subcommands")
+
     ## Arguments of query
-    parser.add_argument("--query", type=str, default="", help="query question or search topic.")
-    parser.add_argument(
+    query_parser = subparsers.add_parser("query", help="Query a question or search topic.")
+    query_parser.add_argument("query", type=str, default="", help="query question or search topic.")
+    query_parser.add_argument(
         "--max_iter",
         type=int,
         default=3,
@@ -29,27 +42,28 @@ def main():
     )
 
     ## Arguments of loading
-    parser.add_argument(
-        "--load",
+    load_parser = subparsers.add_parser(
+        "load", help="Load knowledge from local files or from URLs."
+    )
+    load_parser.add_argument(
+        "load_path",
         type=str,
         nargs="+",  # 1 or more files or urls
         help="Load knowledge from local files or from URLs.",
     )
-
-    parser.add_argument(
+    load_parser.add_argument(
         "--collection_name",
         type=str,
         default=None,
         help="Destination collection name of loaded knowledge.",
     )
-    parser.add_argument(
+    load_parser.add_argument(
         "--collection_desc",
         type=str,
         default=None,
         help="Description of the collection.",
     )
-
-    parser.add_argument(
+    load_parser.add_argument(
         "--force_new_collection",
         type=bool,
         default=False,
@@ -57,30 +71,29 @@ def main():
     )
 
     args = parser.parse_args()
-    if args.query:
+    if args.subcommand == "query":
         final_answer, refs, consumed_tokens = query(args.query, max_iter=args.max_iter)
         log.color_print("\n==== FINAL ANSWER====\n")
         log.color_print(final_answer)
         log.color_print("\n### References\n")
         for i, ref in enumerate(refs):
             log.color_print(f"{i + 1}. {ref.text[:60]}… {ref.reference}")
+    elif args.subcommand == "load":
+        urls = [url for url in args.load_path if url.startswith("http")]
+        local_files = [file for file in args.load_path if not file.startswith("http")]
+        kwargs = {}
+        if args.collection_name:
+            kwargs["collection_name"] = args.collection_name
+        if args.collection_desc:
+            kwargs["collection_description"] = args.collection_desc
+        if args.force_new_collection:
+            kwargs["force_new_collection"] = args.force_new_collection
+        if len(urls) > 0:
+            load_from_website(urls, **kwargs)
+        if len(local_files) > 0:
+            load_from_local_files(local_files, **kwargs)
     else:
-        if args.load:
-            urls = [url for url in args.load if url.startswith("http")]
-            local_files = [file for file in args.load if not file.startswith("http")]
-            kwargs = {}
-            if args.collection_name:
-                kwargs["collection_name"] = args.collection_name
-            if args.collection_desc:
-                kwargs["collection_description"] = args.collection_desc
-            if args.force_new_collection:
-                kwargs["force_new_collection"] = args.force_new_collection
-            if len(urls) > 0:
-                load_from_website(urls, **kwargs)
-            if len(local_files) > 0:
-                load_from_local_files(local_files, **kwargs)
-        else:
-            print("Please provide a query or a load argument.")
+        print("Please provide a query or a load argument.")
 
 
 if __name__ == "__main__":

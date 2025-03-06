@@ -253,31 +253,37 @@ result = query("Write a report about xxx.") # Your question here
 ### Python CLI Mode
 #### Load
 ```shell
-deepsearcher --load "your_local_path_or_url"
+deepsearcher load "your_local_path_or_url"
 # load into a specific collection
-deepsearcher --load "your_local_path_or_url" --collection_name "your_collection_name" --collection_desc "your_collection_description"
+deepsearcher load "your_local_path_or_url" --collection_name "your_collection_name" --collection_desc "your_collection_description"
 ```
 Example loading from local file:
 ```shell
-deepsearcher --load "/path/to/your/local/file.pdf"
+deepsearcher load "/path/to/your/local/file.pdf"
 # or more files at once
-deepsearcher --load "/path/to/your/local/file1.pdf" "/path/to/your/local/file2.md"
+deepsearcher load "/path/to/your/local/file1.pdf" "/path/to/your/local/file2.md"
 ```
 Example loading from url (*Set `FIRECRAWL_API_KEY` in your environment variables, see [FireCrawl](https://docs.firecrawl.dev/introduction) for more details*):
 
 ```shell
-deepsearcher --load "https://www.wikiwand.com/en/articles/DeepSeek"
+deepsearcher load "https://www.wikiwand.com/en/articles/DeepSeek"
 ```
 
 #### Query
 ```shell
-deepsearcher --query "Write a report about xxx."
+deepsearcher query "Write a report about xxx."
 ```
 
 More help information
 ```shell
 deepsearcher --help
 ```
+For more help information about a specific subcommand, you can use `deepsearcher [subcommand] --help`.
+```shell
+deepsearcher load --help
+deepsearcher query --help
+```
+
 ### Deployment
 
 #### Configure modules
