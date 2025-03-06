@@ -109,6 +109,17 @@ provide_settings:
       token: "root:Milvus"
       db: "default"
 
+  # vector_db:      
+  #   provider: "OracleDB"
+  #   config:
+  #     default_collection: "deepsearcher"
+  #     user: ""
+  #     password: ""
+  #     dsn: ""
+  #     config_dir: ""
+  #     wallet_location: ""
+  #     wallet_password: ""
+
 query_settings:
   max_iter: 3
 

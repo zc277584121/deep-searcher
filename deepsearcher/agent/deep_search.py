@@ -10,7 +10,7 @@ from deepsearcher.vector_db import RetrievalResult
 from deepsearcher.vector_db.base import BaseVectorDB, deduplicate_results
 
 SUB_QUERY_PROMPT = """To answer this question more comprehensively, please break down the original question into up to four sub-questions. Return as list of str.
-If this is a very simple question and no decomposition is necessary, then keep the only one original question in the list.
+If this is a very simple question and no decomposition is necessary, then keep the only one original question in the python code list.
 
 Original Question: {original_query}
 
@@ -27,7 +27,7 @@ Example output:
 ]
 </EXAMPLE>
 
-Provide your response in list of str format:
+Provide your response in a python code list of str format:
 """
 
 RERANK_PROMPT = """Based on the query questions and the retrieved chunk, to determine whether the chunk is helpful in answering any of the query question, you can only return "YES" or "NO", without any other information.
