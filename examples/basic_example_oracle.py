@@ -4,12 +4,11 @@ script_directory = Path(__file__).resolve().parent.parent
 sys.path.append(os.path.abspath(script_directory))
 
 import logging
-import asyncio
 
 httpx_logger = logging.getLogger("httpx")  # disable openai's logger output
 httpx_logger.setLevel(logging.WARNING)
 
-
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Customize your config here
 from deepsearcher.configuration import Configuration, init_config
@@ -23,7 +22,7 @@ init_config(config=config)
 from deepsearcher.offline_loading import load_from_local_files
 
 load_from_local_files(
-    paths_or_directory="examples/data/WhatisMilvus.pdf",
+    paths_or_directory=os.path.join(current_dir, "data/WhatisMilvus.pdf"),
     collection_name="milvus_docs",
     collection_description="All Milvus Documents",
     # force_new_collection=True, # If you want to drop origin collection and create a new collection every time, set force_new_collection to True
