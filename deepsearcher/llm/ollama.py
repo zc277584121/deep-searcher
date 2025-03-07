@@ -4,7 +4,7 @@ from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class Ollama(BaseLLM):
-    def __init__(self, model: str = "qwen2.5:3b", **kwargs):
+    def __init__(self, model: str = "qwq", **kwargs):
         from ollama import Client
 
         self.model = model
