@@ -32,13 +32,16 @@ k_list = [2, 5]
 
 
 def _deepsearch_retrieve_titles(
-    question: str, retry_num: int = 4, base_wait_time: int = 4
+    question: str,
+    retry_num: int = 4,
+    base_wait_time: int = 4,
+    max_iter: int = 3,
 ) -> Tuple[List[str], int, bool]:
     retrieved_results = []
     consume_tokens = 0
     for i in range(retry_num):
         try:
-            retrieved_results, _, consume_tokens = retrieve(question)
+            retrieved_results, _, consume_tokens = retrieve(question, max_iter=max_iter)
             break
         except Exception:
             wait_time = base_wait_time * (2**i)
@@ -91,6 +94,7 @@ def evaluate(
     dataset: str,
     output_root: str,
     pre_num: int = 10,
+    max_iter: int = 3,
     skip_load=False,
     flag: str = "result",
 ):
@@ -134,7 +138,9 @@ def evaluate(
         global_idx = sample_idx + start_ind
         question = sample["question"]
 
-        retrieved_titles, consume_tokens, fail = _deepsearch_retrieve_titles(question)
+        retrieved_titles, consume_tokens, fail = _deepsearch_retrieve_titles(
+            question, max_iter=max_iter
+        )
         retrieved_titles_naive = _naive_retrieve_titles(question)
 
         if fail:
@@ -207,6 +213,12 @@ def main_eval():
         help="Number of samples to evaluate, default is 30",
     )
     parser.add_argument(
+        "--max_iter",
+        type=int,
+        default=3,
+        help="Max iterations of reflection. Default is 3. It will overwrite the one in config yaml file.",
+    )
+    parser.add_argument(
         "--output_dir",
         type=str,
         default="./eval_output",
@@ -233,6 +245,7 @@ def main_eval():
         dataset=args.dataset,
         output_root=args.output_dir,
         pre_num=args.pre_num,
+        max_iter=args.max_iter,
         skip_load=args.skip_load,
         flag=args.flag,
     )
