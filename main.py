@@ -1,9 +1,10 @@
 import argparse
-from typing import List, Union
+from typing import Dict, List, Union
 
 import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from deepsearcher.configuration import Configuration, init_config
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
@@ -14,6 +15,26 @@ app = FastAPI()
 config = Configuration()
 
 init_config(config)
+
+
+class ProviderConfigRequest(BaseModel):
+    feature: str
+    provider: str
+    config: Dict
+
+
+@app.post("/set-provider-config/")
+def set_provider_config(request: ProviderConfigRequest):
+    try:
+        config.set_provider_config(request.feature, request.provider, request.config)
+        init_config(config)
+        return {
+            "message": "Provider config set successfully",
+            "provider": request.provider,
+            "config": request.config,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to set provider config: {str(e)}")
 
 
 @app.post("/load-files/")
