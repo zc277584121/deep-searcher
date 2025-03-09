@@ -123,6 +123,8 @@ def evaluate(
     existing_df = pd.DataFrame()
     existing_statistics = defaultdict(dict)
     existing_token_usage = 0
+    existing_error_num = 0
+    existing_sample_num = 0
     if os.path.exists(csv_file_path):
         existing_df = pd.read_csv(csv_file_path)
         start_ind = len(existing_df)
@@ -134,6 +136,8 @@ def evaluate(
             f"Loading statistics from {statistics_file_path}, will recalculate the statistics based on both new and existing results."
         )
         existing_token_usage = existing_statistics["deepsearcher"]["token_usage"]
+        existing_error_num = existing_statistics["deepsearcher"].get("error_num", 0)
+        existing_sample_num = existing_statistics["deepsearcher"].get("sample_num", 0)
     for sample_idx, sample in enumerate(data_with_gt[start_ind:end_ind]):
         global_idx = sample_idx + start_ind
         question = sample["question"]
@@ -184,8 +188,15 @@ def evaluate(
         _print_recall_line(average_recall, pre_str="Average recall of DeepSearcher: ")
         _print_recall_line(average_recall_naive, pre_str="Average recall of naive RAG   : ")
         existing_token_usage += consume_tokens
+        existing_error_num += 1 if fail else 0
+        existing_sample_num += 1
         existing_statistics["deepsearcher"]["average_recall"] = average_recall
         existing_statistics["deepsearcher"]["token_usage"] = existing_token_usage
+        existing_statistics["deepsearcher"]["error_num"] = existing_error_num
+        existing_statistics["deepsearcher"]["sample_num"] = existing_sample_num
+        existing_statistics["deepsearcher"]["token_usage_per_sample"] = (
+            existing_token_usage / existing_sample_num
+        )
         existing_statistics["naive_rag"]["average_recall"] = average_recall_naive
         json.dump(existing_statistics, open(statistics_file_path, "w"), indent=4)
         print("")
