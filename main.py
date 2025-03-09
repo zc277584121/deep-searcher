@@ -1,7 +1,9 @@
+import argparse
 from typing import List, Union
 
 import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 from deepsearcher.configuration import Configuration, init_config
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
@@ -87,11 +89,25 @@ def perform_query(
     ),
 ):
     try:
-        result = query(original_query, max_iter)
-        return {"result": result}
+        result_text, _, consume_token = query(original_query, max_iter)
+        return {"result": result_text, "consume_token": consume_token}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="FastAPI Server")
+    parser.add_argument("--enable-cors", type=bool, default=False, help="Enable CORS support")
+    args = parser.parse_args()
+    if args.enable_cors:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+        print("CORS is enabled.")
+    else:
+        print("CORS is disabled.")
     uvicorn.run(app, host="0.0.0.0", port=8000)
