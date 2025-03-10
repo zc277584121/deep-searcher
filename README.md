@@ -138,6 +138,7 @@ result = query("Write a report about xxx.") # Your question here
   <p> Example: <code>ollama pull qwq</code></p>
   <p> To chat directly with a model from the command line, use <code>ollama run &lt;name-of-model&gt;</code>.</p>
   <p> By default, Ollama has a REST API for running and managing models on <a href="http://localhost:11434">http://localhost:11434</a>.</p>
+  <pre><code>config.set_provider_config("llm", "Ollama", {"model": "qwq"})</code></pre>
 </details>
 
 #### Embedding Model Configuration
