@@ -5,7 +5,7 @@ from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class Anthropic(BaseLLM):
-    def __init__(self, model: str = "claude-3-5-sonnet-latest", max_tokens: int = 8192, **kwargs):
+    def __init__(self, model: str = "claude-3-7-sonnet-latest", max_tokens: int = 8192, **kwargs):
         import anthropic
 
         self.model = model

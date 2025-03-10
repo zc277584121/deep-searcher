@@ -2,31 +2,31 @@ provide_settings:
   llm:
     provider: "OpenAI"
     config:
-      model: "gpt-4o-mini"  # "gpt-o1-mini"
+      model: "o1-mini"
 #      api_key: "sk-xxxx"  # Uncomment to override the `OPENAI_API_KEY` set in the environment variable
 #      base_url: ""
 
 #    provider: "DeepSeek"
 #    config:
-#      model: "deepseek-chat"  # "deepseek-reasoner"
+#      model: "deepseek-reasoner"
 ##      api_key: "sk-xxxx"  # Uncomment to override the `DEEPSEEK_API_KEY` set in the environment variable
 ##      base_url: ""
 
 #    provider: "SiliconFlow"
 #    config:
-#      model: "deepseek-ai/DeepSeek-V3"
+#      model: "deepseek-ai/DeepSeek-R1"
 ##      api_key: "xxxx"  # Uncomment to override the `SILICONFLOW_API_KEY` set in the environment variable
 ##      base_url: ""
 
 #    provider: "PPIO"
 #    config:
-#      model: "deepseek/deepseek-v3/community"
+#      model: "deepseek/deepseek-r1"
 ##      api_key: "xxxx"  # Uncomment to override the `PPIO_API_KEY` set in the environment variable
 ##      base_url: ""
 
 #    provider: "TogetherAI"
 #    config:
-#      model: "deepseek-ai/DeepSeek-V3"
+#      model: "deepseek-ai/DeepSeek-R1"
 ##      api_key: "xxxx"  # Uncomment to override the `TOGETHER_API_KEY` set in the environment variable
 
 #    provider: "AzureOpenAI"

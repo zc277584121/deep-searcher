@@ -5,7 +5,7 @@ from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class OpenAI(BaseLLM):
-    def __init__(self, model: str = "gpt-4o", **kwargs):
+    def __init__(self, model: str = "o1-mini", **kwargs):
         from openai import OpenAI as OpenAI_
 
         self.model = model

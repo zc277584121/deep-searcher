@@ -9,7 +9,7 @@ class PPIO(BaseLLM):
     PPIO API
     """
 
-    def __init__(self, model: str = "deepseek/deepseek-v3/community", **kwargs):
+    def __init__(self, model: str = "deepseek/deepseek-r1", **kwargs):
         from openai import OpenAI as OpenAI_
 
         self.model = model

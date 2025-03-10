@@ -51,7 +51,7 @@ config = Configuration()
 
 # Customize your config here,
 # more configuration see the Configuration Details section below.
-config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o-mini"})
+config.set_provider_config("llm", "OpenAI", {"model": "o1-mini"})
 config.set_provider_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-ada-002"})
 init_config(config = config)
 
@@ -76,28 +76,28 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (OpenAI)</summary>
     <p> Make sure you have prepared your OPENAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "o1-mini"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/models </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from official)</summary>
     <p> Make sure you have prepared your DEEPSEEK API KEY as an env variable <code>DEEPSEEK_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-chat"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-reasoner"})</code></pre>
     <p> More details about DeepSeek: https://api-docs.deepseek.com/ </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from SiliconFlow)</summary>
     <p> Make sure you have prepared your SILICONFLOW API KEY as an env variable <code>SILICONFLOW_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-R1"})</code></pre>
     <p> More details about SiliconFlow: https://docs.siliconflow.cn/quickstart </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from TogetherAI)</summary>
     <p> Make sure you have prepared your TOGETHER API KEY as an env variable <code>TOGETHER_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-R1"})</code></pre>
     <p> You need to install together before running, execute: <code>pip install together</code>. More details about TogetherAI: https://www.together.ai/ </p>
 </details>
 
@@ -111,7 +111,7 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (Claude)</summary>
     <p> Make sure you have prepared your ANTHROPIC API KEY as an env variable <code>ANTHROPIC_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "Anthropic", {"model": "claude-3-5-sonnet-latest"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "Anthropic", {"model": "claude-3-7-sonnet-latest"})</code></pre>
     <p> More details about Anthropic Claude: https://docs.anthropic.com/en/home </p>
 </details>
 
@@ -125,7 +125,7 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (DeepSeek from PPIO)</summary>
     <p> Make sure you have prepared your PPIO API KEY as an env variable <code>PPIO_API_KEY</code>. You can create an API Key <a href="https://ppinfra.com/settings/key-management?utm_source=github_deep-searcher">here</a>. </p>
-    <pre><code>config.set_provider_config("llm", "PPIO", {"model": "deepseek/deepseek-v3/community"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "PPIO", {"model": "deepseek/deepseek-r1"})</code></pre>
     <p> More details about PPIO: https://ppinfra.com/docs/get-started/quickstart.html?utm_source=github_deep-searcher </p>
 </details>
 
@@ -314,11 +314,18 @@ Click on the button "Try it out", it allows you to fill the parameters and direc
 
 ## ❓ Q&A
 
-**Q1**: 
+**Q1**: Why I failed to parse LLM output format / How to select the LLM?
+
+
+**A1**: Small LLMs struggle to follow the prompt to generate a desired response, which usually cause the format parsing problem. A better practice is to use large reasoning models e.g. deepseek-r1 671b, OpenAI o-series, Claude 3.7 sonnet, etc. as your LLM. 
+
+---
+
+**Q2**: 
 OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files and it looks like GPTCache/paraphrase-albert-small-v2 is not the path to a directory containing a file named config.json.
 Checkout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.
 
-**A1**: This is mainly due to abnormal access to huggingface, which may be a network or permission problem. You can try the following two methods:
+**A2**: This is mainly due to abnormal access to huggingface, which may be a network or permission problem. You can try the following two methods:
 1. If there is a network problem, set up a proxy, try adding the following environment variable.
 ```bash
 export HF_ENDPOINT=https://hf-mirror.com
@@ -330,9 +337,9 @@ export HUGGING_FACE_HUB_TOKEN=xxxx
 
 ---
 
-**Q2**: DeepSearcher doesn't run in Jupyter notebook.
+**Q3**: DeepSearcher doesn't run in Jupyter notebook.
 
-**A2**: Install `nest_asyncio` and then put this code block in front of your jupyter notebook.
+**A3**: Install `nest_asyncio` and then put this code block in front of your jupyter notebook.
 
 ```
 pip install nest_asyncio

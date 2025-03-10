@@ -9,7 +9,7 @@ class SiliconFlow(BaseLLM):
     https://docs.siliconflow.cn/quickstart
     """
 
-    def __init__(self, model: str = "deepseek-ai/DeepSeek-V3", **kwargs):
+    def __init__(self, model: str = "deepseek-ai/DeepSeek-R1", **kwargs):
         from openai import OpenAI as OpenAI_
 
         self.model = model

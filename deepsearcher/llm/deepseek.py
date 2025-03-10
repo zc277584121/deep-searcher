@@ -9,7 +9,7 @@ class DeepSeek(BaseLLM):
     https://api-docs.deepseek.com/
     """
 
-    def __init__(self, model: str = "deepseek-chat", **kwargs):
+    def __init__(self, model: str = "deepseek-reasoner", **kwargs):
         from openai import OpenAI as OpenAI_
 
         self.model = model
