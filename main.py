@@ -54,12 +54,18 @@ def load_files(
         description="Optional description for the collection.",
         examples=["This is a test collection."],
     ),
+    batch_size: int = Body(
+        None,
+        description="Optional batch size for the collection.",
+        examples=[256],
+    ),
 ):
     try:
         load_from_local_files(
             paths_or_directory=paths,
             collection_name=collection_name,
             collection_description=collection_description,
+            batch_size=batch_size,
         )
         return {"message": "Files loaded successfully."}
     except Exception as e:
@@ -83,12 +89,18 @@ def load_website(
         description="Optional description for the collection.",
         examples=["This is a test collection."],
     ),
+    batch_size: int = Body(
+        None,
+        description="Optional batch size for the collection.",
+        examples=[256],
+    ),
 ):
     try:
         load_from_website(
             urls=urls,
             collection_name=collection_name,
             collection_description=collection_description,
+            batch_size=batch_size,
         )
         return {"message": "Website loaded successfully."}
     except Exception as e:

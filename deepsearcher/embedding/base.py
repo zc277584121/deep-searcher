@@ -12,7 +12,7 @@ class BaseEmbedding:
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         return [self.embed_query(text) for text in texts]
 
-    def embed_chunks(self, chunks: List[Chunk], batch_size=256) -> List[Chunk]:
+    def embed_chunks(self, chunks: List[Chunk], batch_size: int = 256) -> List[Chunk]:
         texts = [chunk.text for chunk in chunks]
         batch_texts = [texts[i : i + batch_size] for i in range(0, len(texts), batch_size)]
         embeddings = []

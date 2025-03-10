@@ -52,6 +52,12 @@ def main():
         help="Load knowledge from local files or from URLs.",
     )
     load_parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=256,
+        help="Batch size for loading knowledge.",
+    )
+    load_parser.add_argument(
         "--collection_name",
         type=str,
         default=None,
@@ -88,6 +94,8 @@ def main():
             kwargs["collection_description"] = args.collection_desc
         if args.force_new_collection:
             kwargs["force_new_collection"] = args.force_new_collection
+        if args.batch_size:
+            kwargs["batch_size"] = args.batch_size
         if len(urls) > 0:
             load_from_website(urls, **kwargs)
         if len(local_files) > 0:

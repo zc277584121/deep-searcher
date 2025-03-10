@@ -13,8 +13,9 @@ def load_from_local_files(
     collection_name: str = None,
     collection_description: str = None,
     force_new_collection: bool = False,
-    chunk_size=1500,
-    chunk_overlap=100,
+    chunk_size: int = 1500,
+    chunk_overlap: int = 100,
+    batch_size: int = 256,
 ):
     vector_db = configuration.vector_db
     if collection_name is None:
@@ -46,7 +47,7 @@ def load_from_local_files(
         chunk_overlap=chunk_overlap,
     )
 
-    chunks = embedding_model.embed_chunks(chunks)
+    chunks = embedding_model.embed_chunks(chunks, batch_size=batch_size)
     vector_db.insert_data(collection=collection_name, chunks=chunks)
 
 
@@ -55,6 +56,7 @@ def load_from_website(
     collection_name: str = None,
     collection_description: str = None,
     force_new_collection: bool = False,
+    batch_size: int = 256,
     **crawl_kwargs,
 ):
     if isinstance(urls, str):
@@ -73,5 +75,5 @@ def load_from_website(
     all_docs = web_crawler.crawl_urls(urls, **crawl_kwargs)
 
     chunks = split_docs_to_chunks(all_docs)
-    chunks = embedding_model.embed_chunks(chunks)
+    chunks = embedding_model.embed_chunks(chunks, batch_size=batch_size)
     vector_db.insert_data(collection=collection_name, chunks=chunks)
