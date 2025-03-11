@@ -9,6 +9,8 @@ assignees: ''
 
 Please describe your issue **in English**
 
+*Note: Small LLMs cannot perform well at prompt following, and are prone to hallucinations. Please make sure your LLM is cutting-edge, preferably a reasoning model, e.g. OpenAI o-series, DeepSeek R1, Claude 3.7 Sonnet etc.*
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
