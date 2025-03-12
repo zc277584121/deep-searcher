@@ -1,4 +1,5 @@
 from .bedrock_embedding import BedrockEmbedding
+from .gemini_embedding import GeminiEmbedding
 from .milvus_embedding import MilvusEmbedding
 from .openai_embedding import OpenAIEmbedding
 from .siliconflow_embedding import SiliconflowEmbedding
@@ -10,4 +11,5 @@ __all__ = [
     "VoyageEmbedding",
     "BedrockEmbedding",
     "SiliconflowEmbedding",
+    "GeminiEmbedding",
 ]

@@ -70,6 +70,12 @@ provide_settings:
 #      model: "BAAI/bge-m3"
 # .    api_key: ""   # Uncomment to override the `SILICONFLOW_API_KEY` set in the environment variable   
 
+#    provider: "GeminiEmbedding"
+#    config:
+#      model: "text-embedding-004"
+##       api_key: ""  # Uncomment to override the `GEMINI_API_KEY` set in the environment variable
+##       dimension: 768 # Uncomment to customize the embedding dimension 
+
   file_loader:
     provider: "PDFLoader"
     config: {}
