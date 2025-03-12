@@ -5,19 +5,49 @@ from langchain_core.documents import Document
 
 
 class BaseCrawler(ABC):
+    """
+    Abstract base class for web crawlers.
+
+    This class defines the interface for crawling web pages and converting them
+    into Document objects for further processing.
+    """
+
     def __init__(self, **kwargs):
+        """
+        Initialize the crawler with optional keyword arguments.
+
+        Args:
+            **kwargs: Optional keyword arguments for specific crawler implementations.
+        """
         pass
 
     def crawl_url(self, url: str, **crawl_kwargs) -> List[Document]:
+        """
+        Crawl a single URL and convert it to Document objects.
+
+        Args:
+            url: The URL to crawl.
+            **crawl_kwargs: Optional keyword arguments for the crawling process.
+
+        Returns:
+            A list of Document objects containing the content and metadata from the URL.
+
+        Note:
+            Implementations should include the URL reference in the metadata.
+            e.g. return [Document(page_content=..., metadata={"reference": "www.abc.com/page1.html"})]
+        """
         pass
-        # Return a list of Document objects which contain the markdown format information of the website
-        # In the metadata, it's recommended to include the reference to the url.
-        # e.g.
-        # return [Document(page_content=..., metadata={"reference": "www.abc.com/page1.html"})]
 
     def crawl_urls(self, urls: List[str], **crawl_kwargs) -> List[Document]:
         """
         Crawl multiple URLs and return a list of Document objects.
+
+        Args:
+            urls: A list of URLs to crawl.
+            **crawl_kwargs: Optional keyword arguments for the crawling process.
+
+        Returns:
+            A list of Document objects containing the content and metadata from all URLs.
         """
         documents = []
         for url in urls:

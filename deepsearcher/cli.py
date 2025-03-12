@@ -16,6 +16,16 @@ warnings.simplefilter(action="ignore", category=FutureWarning)  # disable warnin
 
 
 def main():
+    """
+    Main entry point for the DeepSearcher CLI.
+
+    This function parses command line arguments and executes the appropriate action
+    based on the subcommand provided (query or load). It handles the deprecated
+    command line format and provides helpful error messages.
+
+    Returns:
+        None
+    """
     if "--query" in sys.argv or "--load" in sys.argv:
         print("\033[91m[Deprecated]\033[0m The use of '--query' and '--load' is deprecated.")
         print("Please use:")

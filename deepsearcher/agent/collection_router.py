@@ -16,7 +16,21 @@ When you return, you can ONLY return a python list of str, WITHOUT any other add
 
 
 class CollectionRouter(BaseAgent):
+    """
+    Routes queries to appropriate collections in the vector database.
+
+    This class analyzes the content of a query and determines which collections
+    in the vector database are most likely to contain relevant information.
+    """
+
     def __init__(self, llm: BaseLLM, vector_db: BaseVectorDB, **kwargs):
+        """
+        Initialize the CollectionRouter.
+
+        Args:
+            llm: The language model to use for analyzing queries.
+            vector_db: The vector database containing the collections.
+        """
         self.llm = llm
         self.vector_db = vector_db
         self.all_collections = [
@@ -24,6 +38,20 @@ class CollectionRouter(BaseAgent):
         ]
 
     def invoke(self, query: str, **kwargs) -> Tuple[List[str], int]:
+        """
+        Determine which collections are relevant for the given query.
+
+        This method analyzes the query content and selects collections that are
+        most likely to contain information relevant to answering the query.
+
+        Args:
+            query (str): The query to analyze.
+
+        Returns:
+            Tuple[List[str], int]: A tuple containing:
+                - A list of selected collection names
+                - The token usage for the routing operation
+        """
         consume_tokens = 0
         collection_infos = self.vector_db.list_collections()
         vector_db_search_prompt = COLLECTION_ROUTE_PROMPT.format(

@@ -18,6 +18,15 @@ init_config(config)
 
 
 class ProviderConfigRequest(BaseModel):
+    """
+    Request model for setting provider configuration.
+
+    Attributes:
+        feature (str): The feature to configure (e.g., 'embedding', 'llm').
+        provider (str): The provider name (e.g., 'openai', 'azure').
+        config (Dict): Configuration parameters for the provider.
+    """
+
     feature: str
     provider: str
     config: Dict
@@ -25,6 +34,18 @@ class ProviderConfigRequest(BaseModel):
 
 @app.post("/set-provider-config/")
 def set_provider_config(request: ProviderConfigRequest):
+    """
+    Set configuration for a specific provider.
+
+    Args:
+        request (ProviderConfigRequest): The request containing provider configuration.
+
+    Returns:
+        dict: A dictionary containing a success message and the updated configuration.
+
+    Raises:
+        HTTPException: If setting the provider config fails.
+    """
     try:
         config.set_provider_config(request.feature, request.provider, request.config)
         init_config(config)
@@ -60,6 +81,21 @@ def load_files(
         examples=[256],
     ),
 ):
+    """
+    Load files into the vector database.
+
+    Args:
+        paths (Union[str, List[str]]): File paths or directories to load.
+        collection_name (str, optional): Name for the collection. Defaults to None.
+        collection_description (str, optional): Description for the collection. Defaults to None.
+        batch_size (int, optional): Batch size for processing. Defaults to None.
+
+    Returns:
+        dict: A dictionary containing a success message.
+
+    Raises:
+        HTTPException: If loading files fails.
+    """
     try:
         load_from_local_files(
             paths_or_directory=paths,
@@ -95,6 +131,21 @@ def load_website(
         examples=[256],
     ),
 ):
+    """
+    Load website content into the vector database.
+
+    Args:
+        urls (Union[str, List[str]]): URLs of websites to load.
+        collection_name (str, optional): Name for the collection. Defaults to None.
+        collection_description (str, optional): Description for the collection. Defaults to None.
+        batch_size (int, optional): Batch size for processing. Defaults to None.
+
+    Returns:
+        dict: A dictionary containing a success message.
+
+    Raises:
+        HTTPException: If loading website content fails.
+    """
     try:
         load_from_website(
             urls=urls,
@@ -121,6 +172,19 @@ def perform_query(
         examples=[3],
     ),
 ):
+    """
+    Perform a query against the loaded data.
+
+    Args:
+        original_query (str): The user's question or query.
+        max_iter (int, optional): Maximum number of iterations for reflection. Defaults to 3.
+
+    Returns:
+        dict: A dictionary containing the query result and token consumption.
+
+    Raises:
+        HTTPException: If the query fails.
+    """
     try:
         result_text, _, consume_token = query(original_query, max_iter)
         return {"result": result_text, "consume_token": consume_token}

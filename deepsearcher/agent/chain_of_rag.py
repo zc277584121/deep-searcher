@@ -19,7 +19,7 @@ FOLLOWUP_QUERY_PROMPT = """You are using a search tool to answer the main query 
 Respond with a simple follow-up question that will help answer the main query, do not explain yourself or output anything else.
 """
 
-INTERMEDIATE_ANSWER_PROMPT = """Given the following documents, generate an appropriate answer for the query. DO NOT hallucinate any information, only use the provided documents to generate the answer. Respond “No relevant information found” if the documents do not contain useful information.
+INTERMEDIATE_ANSWER_PROMPT = """Given the following documents, generate an appropriate answer for the query. DO NOT hallucinate any information, only use the provided documents to generate the answer. Respond "No relevant information found" if the documents do not contain useful information.
 
 ## Documents
 {retrieved_documents}
@@ -45,7 +45,7 @@ Respond with an appropriate answer only, do not explain yourself or output anyth
 """
 
 # TODO: will be used for early stop, will develop it recently
-REFLECTION_PROMPT = """Given the following intermediate queries and answers, judge whether you have enough information to answer the main query. If you believe you have enough information, respond with “Yes”, otherwise respond with “No”.
+REFLECTION_PROMPT = """Given the following intermediate queries and answers, judge whether you have enough information to answer the main query. If you believe you have enough information, respond with "Yes", otherwise respond with "No".
 
 ## Intermediate queries and answers
 {intermediate_context}
@@ -53,7 +53,7 @@ REFLECTION_PROMPT = """Given the following intermediate queries and answers, jud
 ## Main query
 {query}
 
-Respond with “Yes” or “No” only, do not explain yourself or output anything else.
+Respond with "Yes" or "No" only, do not explain yourself or output anything else.
 """
 
 GET_SUPPORTED_DOCS_PROMPT = """Given the following documents, select the ones that are support the Q-A pair.
@@ -76,6 +76,16 @@ Respond with a python list of indices of the selected documents.
     "It is very suitable for handling concrete factual queries and multi-hop questions."
 )
 class ChainOfRAG(RAGAgent):
+    """
+    Chain of Retrieval-Augmented Generation (RAG) agent implementation.
+
+    This agent implements a multi-step RAG process where each step can refine
+    the query and retrieval process based on previous results, creating a chain
+    of increasingly focused and relevant information retrieval and generation.
+    Inspired by: https://arxiv.org/pdf/2501.14342
+
+    """
+
     def __init__(
         self,
         llm: BaseLLM,
@@ -86,6 +96,17 @@ class ChainOfRAG(RAGAgent):
         text_window_splitter: bool = True,
         **kwargs,
     ):
+        """
+        Initialize the ChainOfRAG agent with configuration parameters.
+
+        Args:
+            llm (BaseLLM): The language model to use for generating answers.
+            embedding_model (BaseEmbedding): The embedding model to use for embedding queries.
+            vector_db (BaseVectorDB): The vector database to search for relevant documents.
+            max_iter (int, optional): The maximum number of iterations for the RAG process. Defaults to 4.
+            route_collection (bool, optional): Whether to route the query to specific collections. Defaults to True.
+            text_window_splitter (bool, optional): Whether use text_window splitter. Defaults to True.
+        """
         self.llm = llm
         self.embedding_model = embedding_model
         self.vector_db = vector_db
@@ -145,7 +166,10 @@ class ChainOfRAG(RAGAgent):
         )
 
     def _get_supported_docs(
-        self, retrieved_results: List[RetrievalResult], query: str, intermediate_answer: str
+        self,
+        retrieved_results: List[RetrievalResult],
+        query: str,
+        intermediate_answer: str,
     ) -> Tuple[List[RetrievalResult], int]:
         supported_retrieved_results = []
         token_usage = 0
@@ -168,6 +192,23 @@ class ChainOfRAG(RAGAgent):
         return supported_retrieved_results, token_usage
 
     def retrieve(self, query: str, **kwargs) -> Tuple[List[RetrievalResult], int, dict]:
+        """
+        Retrieves relevant documents based on the input query and iteratively refines the search.
+
+        This method iteratively refines the search query based on intermediate results, retrieves documents,
+        and filters out supported documents. It keeps track of the intermediate contexts and token usage.
+
+        Args:
+            query (str): The initial search query.
+            **kwargs: Additional keyword arguments.
+                - max_iter (int, optional): The maximum number of iterations for refinement. Defaults to self.max_iter.
+
+        Returns:
+            Tuple[List[RetrievalResult], int, dict]: A tuple containing:
+                - List[RetrievalResult]: The list of all retrieved and deduplicated results.
+                - int: The total token usage across all iterations.
+                - dict: A dictionary containing additional information, including the intermediate contexts.
+        """
         max_iter = kwargs.pop("max_iter", self.max_iter)
         intermediate_contexts = []
         all_retrieved_results = []
@@ -193,6 +234,21 @@ class ChainOfRAG(RAGAgent):
         return all_retrieved_results, token_usage, additional_info
 
     def query(self, query: str, **kwargs) -> Tuple[str, List[RetrievalResult], int]:
+        """
+        Executes a query and returns the final answer along with all retrieved results and total token usage.
+
+        This method initiates a query, retrieves relevant documents, and then summarizes the answer based on the retrieved documents and intermediate contexts. It logs the final answer and returns the answer content, all retrieved results, and the total token usage including the tokens used for the final answer.
+
+        Args:
+            query (str): The initial query to execute.
+            **kwargs: Additional keyword arguments to pass to the `retrieve` method.
+
+        Returns:
+            Tuple[str, List[RetrievalResult], int]: A tuple containing:
+                - str: The final answer content.
+                - List[RetrievalResult]: The list of all retrieved and deduplicated results.
+                - int: The total token usage across all iterations, including the final answer.
+        """
         all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query, **kwargs)
         intermediate_context = additional_info["intermediate_context"]
         log.color_print(

@@ -8,7 +8,21 @@ from deepsearcher.loader.web_crawler.base import BaseCrawler
 
 
 class FireCrawlCrawler(BaseCrawler):
+    """
+    Web crawler using the FireCrawl service.
+
+    This crawler uses the FireCrawl service to crawl web pages and convert them
+    into markdown format for further processing. It supports both single-page scraping
+    and recursive crawling of multiple pages.
+    """
+
     def __init__(self, **kwargs):
+        """
+        Initialize the FireCrawlCrawler.
+
+        Args:
+            **kwargs: Optional keyword arguments.
+        """
         super().__init__(**kwargs)
         self.app = None
 
@@ -53,9 +67,9 @@ class FireCrawlCrawler(BaseCrawler):
             "scrapeOptions": {"formats": ["markdown"]},
             "limit": limit if limit is not None else 20,
             "maxDepth": max_depth if max_depth is not None else 2,
-            "allowBackwardLinks": allow_backward_links
-            if allow_backward_links is not None
-            else False,
+            "allowBackwardLinks": (
+                allow_backward_links if allow_backward_links is not None else False
+            ),
         }
 
         crawl_status = self.app.crawl_url(url=url, params=crawl_params)

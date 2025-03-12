@@ -27,6 +27,21 @@ class OracleDB(BaseVectorDB):
         increment: int = 1,
         default_collection: str = "deepsearcher",
     ):
+        """
+        Initialize the Oracle database connection.
+
+        Args:
+            user (str): Oracle database username.
+            password (str): Oracle database password.
+            dsn (str): Oracle database connection string.
+            config_dir (str): Directory containing Oracle configuration files.
+            wallet_location (str): Location of the Oracle wallet.
+            wallet_password (str): Password for the Oracle wallet.
+            min (int, optional): Minimum number of connections in the pool. Defaults to 1.
+            max (int, optional): Maximum number of connections in the pool. Defaults to 10.
+            increment (int, optional): Increment for adding new connections. Defaults to 1.
+            default_collection (str, optional): Default collection name. Defaults to "deepsearcher".
+        """
         super().__init__(default_collection)
         self.default_collection = default_collection
 
@@ -93,6 +108,19 @@ class OracleDB(BaseVectorDB):
             )
 
     def query(self, sql: str, params: dict = None) -> Union[dict, None]:
+        """
+        Execute a SQL query and return the results.
+
+        Args:
+            sql (str): SQL query to execute.
+            params (dict, optional): Parameters for the SQL query. Defaults to None.
+
+        Returns:
+            Union[dict, None]: Query results as a dictionary or None if no results.
+
+        Raises:
+            Exception: If there's an error executing the query.
+        """
         with self.client.acquire() as connection:
             connection.inputtypehandler = self.input_type_handler
             connection.outputtypehandler = self.output_type_handler
@@ -119,6 +147,16 @@ class OracleDB(BaseVectorDB):
             # self.client.drop(connection)
 
     def execute(self, sql: str, data: Union[list, dict] = None):
+        """
+        Execute a SQL statement without returning results.
+
+        Args:
+            sql (str): SQL statement to execute.
+            data (Union[list, dict], optional): Data for the SQL statement. Defaults to None.
+
+        Raises:
+            Exception: If there's an error executing the statement.
+        """
         try:
             with self.client.acquire() as connection:
                 connection.inputtypehandler = self.input_type_handler
@@ -138,6 +176,15 @@ class OracleDB(BaseVectorDB):
             raise
 
     def has_collection(self, collection: str = "deepsearcher"):
+        """
+        Check if a collection exists in the database.
+
+        Args:
+            collection (str, optional): Collection name to check. Defaults to "deepsearcher".
+
+        Returns:
+            bool: True if the collection exists, False otherwise.
+        """
         SQL = SQL_TEMPLATES["has_collection"]
         params = {"collection": collection}
         res = self.query(SQL, params)
@@ -150,6 +197,12 @@ class OracleDB(BaseVectorDB):
             return False
 
     def check_table(self):
+        """
+        Check if required tables exist and create them if they don't.
+
+        Raises:
+            Exception: If there's an error checking or creating tables.
+        """
         SQL = SQL_TEMPLATES["has_table"]
         try:
             res = self.query(SQL)
@@ -162,6 +215,15 @@ class OracleDB(BaseVectorDB):
             raise
 
     def create_tables(self, table_name):
+        """
+        Create a table in the database.
+
+        Args:
+            table_name: Name of the table to create.
+
+        Raises:
+            Exception: If there's an error creating the table.
+        """
         SQL = TABLES[table_name]
         try:
             self.execute(SQL)
@@ -171,6 +233,15 @@ class OracleDB(BaseVectorDB):
             raise
 
     def drop_collection(self, collection: str = "deepsearcher"):
+        """
+        Drop a collection from the database.
+
+        Args:
+            collection (str, optional): Collection name to drop. Defaults to "deepsearcher".
+
+        Raises:
+            Exception: If there's an error dropping the collection.
+        """
         try:
             params = {"collection": collection}
             SQL = SQL_TEMPLATES["drop_collection"]
@@ -184,13 +255,36 @@ class OracleDB(BaseVectorDB):
             raise
 
     def insertone(self, data):
+        """
+        Insert a single record into the database.
+
+        Args:
+            data: Data to insert.
+        """
         SQL = SQL_TEMPLATES["insert"]
         self.execute(SQL, data)
         log.debug("insert done!")
 
     def searchone(
-        self, collection: Optional[str], vector: Union[np.array, List[float]], top_k: int = 5
+        self,
+        collection: Optional[str],
+        vector: Union[np.array, List[float]],
+        top_k: int = 5,
     ):
+        """
+        Search for similar vectors in a collection.
+
+        Args:
+            collection (Optional[str]): Collection name to search in.
+            vector (Union[np.array, List[float]]): Query vector for similarity search.
+            top_k (int, optional): Number of results to return. Defaults to 5.
+
+        Returns:
+            list: List of search results.
+
+        Raises:
+            Exception: If there's an error during search.
+        """
         log.debug("def searchone:" + collection)
         try:
             if isinstance(vector, List):
@@ -228,6 +322,23 @@ class OracleDB(BaseVectorDB):
         *args,
         **kwargs,
     ):
+        """
+        Initialize a collection in the database.
+
+        Args:
+            dim (int): Dimension of the vector embeddings.
+            collection (Optional[str], optional): Collection name. Defaults to "deepsearcher".
+            description (Optional[str], optional): Collection description. Defaults to "".
+            force_new_collection (bool, optional): Whether to force create a new collection if it already exists. Defaults to False.
+            text_max_length (int, optional): Maximum length for text field. Defaults to 65_535.
+            reference_max_length (int, optional): Maximum length for reference field. Defaults to 2048.
+            metric_type (str, optional): Metric type for vector similarity search. Defaults to "L2".
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Raises:
+            Exception: If there's an error initializing the collection.
+        """
         if not collection:
             collection = self.default_collection
         if description is None:
@@ -253,6 +364,19 @@ class OracleDB(BaseVectorDB):
         *args,
         **kwargs,
     ):
+        """
+        Insert data into a collection.
+
+        Args:
+            collection (Optional[str]): Collection name. If None, uses default_collection.
+            chunks (List[Chunk]): List of Chunk objects to insert.
+            batch_size (int, optional): Number of chunks to insert in each batch. Defaults to 256.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Raises:
+            Exception: If there's an error inserting data.
+        """
         if not collection:
             collection = self.default_collection
 
@@ -285,6 +409,22 @@ class OracleDB(BaseVectorDB):
         *args,
         **kwargs,
     ) -> List[RetrievalResult]:
+        """
+        Search for similar vectors in a collection.
+
+        Args:
+            collection (Optional[str]): Collection name. If None, uses default_collection.
+            vector (Union[np.array, List[float]]): Query vector for similarity search.
+            top_k (int, optional): Number of results to return. Defaults to 5.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            List[RetrievalResult]: List of retrieval results containing similar vectors.
+
+        Raises:
+            Exception: If there's an error during search.
+        """
         if not collection:
             collection = self.default_collection
         try:
@@ -309,6 +449,16 @@ class OracleDB(BaseVectorDB):
             # return []
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
+        """
+        List all collections in the database.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            List[CollectionInfo]: List of collection information objects.
+        """
         collection_infos = []
         try:
             SQL = SQL_TEMPLATES["list_collections"]
@@ -328,6 +478,14 @@ class OracleDB(BaseVectorDB):
             raise
 
     def clear_db(self, collection: str = "deepsearcher", *args, **kwargs):
+        """
+        Clear (drop) a collection from the database.
+
+        Args:
+            collection (str, optional): Collection name to drop. Defaults to "deepsearcher".
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         if not collection:
             collection = self.default_collection
         try:

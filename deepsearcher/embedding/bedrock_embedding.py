@@ -22,12 +22,34 @@ DEFAULT_MODEL_ID = MODEL_ID_TITAN_TEXT_V2
 
 
 class BedrockEmbedding(BaseEmbedding):
+    """
+    Amazon Bedrock embedding model implementation.
+
+    This class provides an interface to the Amazon Bedrock embedding API, which offers
+    various embedding models for text processing, including Amazon Titan and Cohere models.
+    """
+
     def __init__(self, model: str = DEFAULT_MODEL_ID, **kwargs):
         """
+        Initialize the Amazon Bedrock embedding model.
+
         Args:
-            model_name (`str`):
-                Can be one of the following:
-                'amazon.titan-embed-text-v2:0': dimensions include 256, 512, 1024, default is 1024,
+            model (str): The model identifier to use for embeddings.
+                         Default is "amazon.titan-embed-text-v2:0".
+            **kwargs: Additional keyword arguments.
+                - aws_access_key_id (str, optional): AWS access key ID. If not provided,
+                  it will be read from the AWS_ACCESS_KEY_ID environment variable.
+                - aws_secret_access_key (str, optional): AWS secret access key. If not provided,
+                  it will be read from the AWS_SECRET_ACCESS_KEY environment variable.
+                - model_name (str, optional): Alternative way to specify the model.
+
+        Notes:
+            Available models:
+                - 'amazon.titan-embed-text-v2:0': dimensions include 256, 512, 1024, default is 1024
+                - 'amazon.titan-embed-text-v1': 1536 dimensions
+                - 'amazon.titan-embed-image-v1': 1024 dimensions
+                - 'cohere.embed-english-v3': 1024 dimensions
+                - 'cohere.embed-multilingual-v3': 1024 dimensions
         """
         import boto3
 
@@ -50,6 +72,15 @@ class BedrockEmbedding(BaseEmbedding):
         )
 
     def embed_query(self, text: str) -> List[float]:
+        """
+        Embed a single query text using Amazon Bedrock.
+
+        Args:
+            text (str): The query text to embed.
+
+        Returns:
+            List[float]: A list of floats representing the embedding vector.
+        """
         response = self.client.invoke_model(
             modelId=self.model, body=json.dumps({"inputText": text})
         )
@@ -58,8 +89,25 @@ class BedrockEmbedding(BaseEmbedding):
         return embedding
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        Embed a list of document texts.
+
+        This implementation calls embed_query for each text individually.
+
+        Args:
+            texts (List[str]): A list of document texts to embed.
+
+        Returns:
+            List[List[float]]: A list of embedding vectors, one for each input text.
+        """
         return [self.embed_query(text) for text in texts]
 
     @property
     def dimension(self) -> int:
+        """
+        Get the dimensionality of the embeddings for the current model.
+
+        Returns:
+            int: The number of dimensions in the embedding vectors.
+        """
         return BEDROCK_MODEL_DIM_MAP[self.model]

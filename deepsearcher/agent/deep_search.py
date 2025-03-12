@@ -69,6 +69,13 @@ Related Chunks:
     "This agent is suitable for handling general and simple queries, such as given a topic and then writing a report, survey, or article."
 )
 class DeepSearch(RAGAgent):
+    """
+    Deep Search agent implementation for comprehensive information retrieval.
+
+    This agent performs a thorough search through the knowledge base, analyzing
+    multiple aspects of the query to provide comprehensive and detailed answers.
+    """
+
     def __init__(
         self,
         llm: BaseLLM,
@@ -79,6 +86,18 @@ class DeepSearch(RAGAgent):
         text_window_splitter: bool = True,
         **kwargs,
     ):
+        """
+        Initialize the DeepSearch agent.
+
+        Args:
+            llm: The language model to use for generating answers.
+            embedding_model: The embedding model to use for query embedding.
+            vector_db: The vector database to search for relevant documents.
+            max_iter: The maximum number of iterations for the search process.
+            route_collection: Whether to use a collection router for search.
+            text_window_splitter: Whether to use text_window splitter.
+            **kwargs: Additional keyword arguments for customization.
+        """
         self.llm = llm
         self.embedding_model = embedding_model
         self.vector_db = vector_db
@@ -167,6 +186,22 @@ class DeepSearch(RAGAgent):
         return self.llm.literal_eval(response_content), chat_response.total_tokens
 
     def retrieve(self, original_query: str, **kwargs) -> Tuple[List[RetrievalResult], int, dict]:
+        """
+        Retrieve relevant documents from the knowledge base for the given query.
+
+        This method performs a deep search through the vector database to find
+        the most relevant documents for answering the query.
+
+        Args:
+            original_query (str): The query to search for.
+            **kwargs: Additional keyword arguments for customizing the retrieval.
+
+        Returns:
+            Tuple[List[RetrievalResult], int, dict]: A tuple containing:
+                - A list of retrieved document results
+                - The token usage for the retrieval operation
+                - Additional information about the retrieval process
+        """
         return asyncio.run(self.async_retrieve(original_query, **kwargs))
 
     async def async_retrieve(
@@ -235,6 +270,22 @@ class DeepSearch(RAGAgent):
         return all_search_res, total_tokens, additional_info
 
     def query(self, query: str, **kwargs) -> Tuple[str, List[RetrievalResult], int]:
+        """
+        Query the agent and generate an answer based on retrieved documents.
+
+        This method retrieves relevant documents and uses the language model
+        to generate a comprehensive answer to the query.
+
+        Args:
+            query (str): The query to answer.
+            **kwargs: Additional keyword arguments for customizing the query process.
+
+        Returns:
+            Tuple[str, List[RetrievalResult], int]: A tuple containing:
+                - The generated answer
+                - A list of retrieved document results
+                - The total token usage
+        """
         all_retrieved_results, n_token_retrieval, additional_info = self.retrieve(query, **kwargs)
         if not all_retrieved_results or len(all_retrieved_results) == 0:
             return f"No relevant information found for query '{query}'.", [], n_token_retrieval

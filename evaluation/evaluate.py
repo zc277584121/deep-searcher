@@ -37,6 +37,21 @@ def _deepsearch_retrieve_titles(
     base_wait_time: int = 4,
     max_iter: int = 3,
 ) -> Tuple[List[str], int, bool]:
+    """
+    Retrieve document titles using DeepSearcher with retry mechanism.
+
+    Args:
+        question (str): The query question.
+        retry_num (int, optional): Number of retry attempts. Defaults to 4.
+        base_wait_time (int, optional): Base wait time between retries in seconds. Defaults to 4.
+        max_iter (int, optional): Maximum number of iterations for retrieval. Defaults to 3.
+
+    Returns:
+        Tuple[List[str], int, bool]: A tuple containing:
+            - List of retrieved document titles
+            - Number of tokens consumed
+            - Boolean indicating whether the retrieval failed
+    """
     retrieved_results = []
     consume_tokens = 0
     for i in range(retry_num):
@@ -60,6 +75,15 @@ def _deepsearch_retrieve_titles(
 
 
 def _naive_retrieve_titles(question: str) -> List[str]:
+    """
+    Retrieve document titles using naive retrieval method.
+
+    Args:
+        question (str): The query question.
+
+    Returns:
+        List[str]: List of retrieved document titles.
+    """
     retrieved_results = naive_retrieve(question)
     retrieved_titles = [
         retrieved_result.metadata["title"] for retrieved_result in retrieved_results
@@ -68,6 +92,20 @@ def _naive_retrieve_titles(question: str) -> List[str]:
 
 
 def _calcu_recall(sample, retrieved_titles, dataset) -> dict:
+    """
+    Calculate recall metrics for retrieved titles.
+
+    Args:
+        sample: The sample data containing ground truth information.
+        retrieved_titles: List of retrieved document titles.
+        dataset (str): The name of the dataset being evaluated.
+
+    Returns:
+        dict: Dictionary containing recall values at different k values.
+
+    Raises:
+        NotImplementedError: If the dataset is not supported.
+    """
     if dataset in ["2wikimultihopqa"]:
         gold_passages = [item for item in sample["supporting_facts"]]
         gold_items = set([item[0] for item in gold_passages])
@@ -84,6 +122,14 @@ def _calcu_recall(sample, retrieved_titles, dataset) -> dict:
 
 
 def _print_recall_line(recall: dict, pre_str="", post_str="\n"):
+    """
+    Print recall metrics in a formatted line.
+
+    Args:
+        recall (dict): Dictionary containing recall values at different k values.
+        pre_str (str, optional): String to print before recall values. Defaults to "".
+        post_str (str, optional): String to print after recall values. Defaults to "\n".
+    """
     print(pre_str, end="")
     for k in k_list:
         print(f"R@{k}: {recall[k]:.3f} ", end="")
@@ -98,6 +144,17 @@ def evaluate(
     skip_load=False,
     flag: str = "result",
 ):
+    """
+    Evaluate the retrieval performance on a dataset.
+
+    Args:
+        dataset (str): Name of the dataset to evaluate.
+        output_root (str): Root directory for output files.
+        pre_num (int, optional): Number of samples to evaluate. Defaults to 10.
+        max_iter (int, optional): Maximum number of iterations for retrieval. Defaults to 3.
+        skip_load (bool, optional): Whether to skip loading the dataset. Defaults to False.
+        flag (str, optional): Flag for the evaluation run. Defaults to "result".
+    """
     corpus_file = os.path.join(current_dir, f"../examples/data/{dataset}_corpus.json")
     if not skip_load:
         # set chunk size to a large number to avoid chunking, because the dataset was chunked already.
@@ -204,6 +261,12 @@ def evaluate(
 
 
 def main_eval():
+    """
+    Main function for running the evaluation from command line.
+
+    This function parses command line arguments and calls the evaluate function
+    with the appropriate parameters.
+    """
     parser = argparse.ArgumentParser(prog="evaluate", description="Deep Searcher evaluation.")
     parser.add_argument(
         "--dataset",

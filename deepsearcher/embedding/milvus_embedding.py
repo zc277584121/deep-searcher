@@ -19,7 +19,33 @@ MILVUS_MODEL_DIM_MAP = {
 
 
 class MilvusEmbedding(BaseEmbedding):
+    """
+    Milvus embedding model implementation.
+    https://milvus.io/docs/embeddings.md
+
+    This class provides an interface to the Milvus embedding models, which offers
+    various embedding models for text processing, including BGE and Jina models.
+    """
+
     def __init__(self, model: str = None, **kwargs) -> None:
+        """
+        Initialize the Milvus embedding model.
+
+        Args:
+            model (str, optional): The model identifier to use for embeddings.
+                                  If None, the default model will be used.
+            **kwargs: Additional keyword arguments passed to the underlying embedding function.
+                - model_name (str, optional): Alternative way to specify the model.
+
+        Raises:
+            ValueError: If an unsupported model name is provided.
+
+        Notes:
+            Supported models include:
+            - Default model: "GPTCache/paraphrase-albert-onnx" (768 dimensions)
+            - BGE models: "BAAI/bge-*" series (various dimensions)
+            - Jina models: "jina-*" series (requires Jina API key)
+        """
         model_name = model
         from pymilvus import model
 
@@ -41,9 +67,30 @@ class MilvusEmbedding(BaseEmbedding):
                 raise ValueError(f"Currently unsupported model name: {model_name}")
 
     def embed_query(self, text: str) -> List[float]:
+        """
+        Embed a single query text.
+
+        Args:
+            text (str): The query text to embed.
+
+        Returns:
+            List[float]: A list of floats representing the embedding vector.
+        """
         return self.model.encode_queries([text])[0]
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        Embed a list of document texts.
+
+        Args:
+            texts (List[str]): A list of document texts to embed.
+
+        Returns:
+            List[List[float]]: A list of embedding vectors, one for each input text.
+
+        Note:
+            This method handles conversion from numpy arrays to lists if needed.
+        """
         embeddings = self.model.encode_documents(texts)
         if isinstance(embeddings[0], np.ndarray):
             return [embedding.tolist() for embedding in embeddings]
@@ -52,4 +99,10 @@ class MilvusEmbedding(BaseEmbedding):
 
     @property
     def dimension(self) -> int:
+        """
+        Get the dimensionality of the embeddings for the current model.
+
+        Returns:
+            int: The number of dimensions in the embedding vectors.
+        """
         return self.model.dim  # or MILVUS_MODEL_DIM_MAP[self.model_name]

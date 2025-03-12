@@ -20,6 +20,15 @@ class Milvus(BaseVectorDB):
         token: str = "root:Milvus",
         db: str = "default",
     ):
+        """
+        Initialize the Milvus client.
+
+        Args:
+            default_collection (str, optional): Default collection name. Defaults to "deepsearcher".
+            uri (str, optional): URI for connecting to Milvus server. Defaults to "http://localhost:19530".
+            token (str, optional): Authentication token for Milvus. Defaults to "root:Milvus".
+            db (str, optional): Database name. Defaults to "default".
+        """
         super().__init__(default_collection)
         self.default_collection = default_collection
         self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
@@ -36,6 +45,20 @@ class Milvus(BaseVectorDB):
         *args,
         **kwargs,
     ):
+        """
+        Initialize a collection in Milvus.
+
+        Args:
+            dim (int): Dimension of the vector embeddings.
+            collection (Optional[str], optional): Collection name. Defaults to "deepsearcher".
+            description (Optional[str], optional): Collection description. Defaults to "".
+            force_new_collection (bool, optional): Whether to force create a new collection if it already exists. Defaults to False.
+            text_max_length (int, optional): Maximum length for text field. Defaults to 65_535.
+            reference_max_length (int, optional): Maximum length for reference field. Defaults to 2048.
+            metric_type (str, optional): Metric type for vector similarity search. Defaults to "L2".
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         if not collection:
             collection = self.default_collection
         if description is None:
@@ -74,6 +97,16 @@ class Milvus(BaseVectorDB):
         *args,
         **kwargs,
     ):
+        """
+        Insert data into a Milvus collection.
+
+        Args:
+            collection (Optional[str]): Collection name. If None, uses default_collection.
+            chunks (List[Chunk]): List of Chunk objects to insert.
+            batch_size (int, optional): Number of chunks to insert in each batch. Defaults to 256.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         if not collection:
             collection = self.default_collection
         texts = [chunk.text for chunk in chunks]
@@ -107,6 +140,19 @@ class Milvus(BaseVectorDB):
         *args,
         **kwargs,
     ) -> List[RetrievalResult]:
+        """
+        Search for similar vectors in a Milvus collection.
+
+        Args:
+            collection (Optional[str]): Collection name. If None, uses default_collection.
+            vector (Union[np.array, List[float]]): Query vector for similarity search.
+            top_k (int, optional): Number of results to return. Defaults to 5.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            List[RetrievalResult]: List of retrieval results containing similar vectors.
+        """
         if not collection:
             collection = self.default_collection
         try:
@@ -134,6 +180,16 @@ class Milvus(BaseVectorDB):
             return []
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
+        """
+        List all collections in the Milvus database.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            List[CollectionInfo]: List of collection information objects.
+        """
         collection_infos = []
         try:
             collections = self.client.list_collections()
@@ -150,6 +206,14 @@ class Milvus(BaseVectorDB):
         return collection_infos
 
     def clear_db(self, collection: str = "deepsearcher", *args, **kwargs):
+        """
+        Clear (drop) a collection from the Milvus database.
+
+        Args:
+            collection (str, optional): Collection name to drop. Defaults to "deepsearcher".
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         if not collection:
             collection = self.default_collection
         try:

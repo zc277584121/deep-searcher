@@ -5,7 +5,29 @@ from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class Anthropic(BaseLLM):
+    """
+    Anthropic language model implementation.
+
+    This class provides an interface to interact with Anthropic's Claude language models
+    through their API.
+
+    Attributes:
+        model (str): The Anthropic model identifier to use.
+        max_tokens (int): The maximum number of tokens to generate in the response.
+        client: The Anthropic client instance.
+    """
+
     def __init__(self, model: str = "claude-3-7-sonnet-latest", max_tokens: int = 8192, **kwargs):
+        """
+        Initialize an Anthropic language model client.
+
+        Args:
+            model (str, optional): The model identifier to use. Defaults to "claude-3-7-sonnet-latest".
+            max_tokens (int, optional): The maximum number of tokens to generate. Defaults to 8192.
+            **kwargs: Additional keyword arguments to pass to the Anthropic client.
+                - api_key: Anthropic API key. If not provided, uses ANTHROPIC_API_KEY environment variable.
+                - base_url: Anthropic API base URL. If not provided, uses the default Anthropic API endpoint.
+        """
         import anthropic
 
         self.model = model
@@ -21,6 +43,17 @@ class Anthropic(BaseLLM):
         self.client = anthropic.Anthropic(api_key=api_key, base_url=base_url, **kwargs)
 
     def chat(self, messages: List[Dict]) -> ChatResponse:
+        """
+        Send a chat message to the Anthropic model and get a response.
+
+        Args:
+            messages (List[Dict]): A list of message dictionaries, typically in the format
+                                  [{"role": "system", "content": "..."},
+                                   {"role": "user", "content": "..."}]
+
+        Returns:
+            ChatResponse: An object containing the model's response and token usage information.
+        """
         message = self.client.messages.create(
             model=self.model,
             max_tokens=self.max_tokens,

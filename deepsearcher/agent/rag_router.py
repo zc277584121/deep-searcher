@@ -19,12 +19,27 @@ Only return one agent index number that best matches the agent handling the quer
 
 
 class RAGRouter(RAGAgent):
+    """
+    Routes queries to the most appropriate RAG agent implementation.
+
+    This class analyzes the content and requirements of a query and determines
+    which RAG agent implementation is best suited to handle it.
+    """
+
     def __init__(
         self,
         llm: BaseLLM,
         rag_agents: List[RAGAgent],
         agent_descriptions: Optional[List[str]] = None,
     ):
+        """
+        Initialize the RAGRouter.
+
+        Args:
+            llm: The language model to use for analyzing queries.
+            rag_agents: A list of RAGAgent instances.
+            agent_descriptions (list, optional): A list of descriptions for each agent.
+        """
         self.llm = llm
         self.rag_agents = rag_agents
         self.agent_descriptions = agent_descriptions
