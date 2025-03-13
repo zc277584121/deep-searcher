@@ -44,7 +44,6 @@ FINAL_ANSWER_PROMPT = """Given the following intermediate queries and answers, g
 Respond with an appropriate answer only, do not explain yourself or output anything else.
 """
 
-# TODO: will be used for early stop, will develop it recently
 REFLECTION_PROMPT = """Given the following intermediate queries and answers, judge whether you have enough information to answer the main query. If you believe you have enough information, respond with "Yes", otherwise respond with "No".
 
 ## Intermediate queries and answers
@@ -92,6 +91,7 @@ class ChainOfRAG(RAGAgent):
         embedding_model: BaseEmbedding,
         vector_db: BaseVectorDB,
         max_iter: int = 4,
+        early_stopping: bool = False,
         route_collection: bool = True,
         text_window_splitter: bool = True,
         **kwargs,
@@ -104,6 +104,7 @@ class ChainOfRAG(RAGAgent):
             embedding_model (BaseEmbedding): The embedding model to use for embedding queries.
             vector_db (BaseVectorDB): The vector database to search for relevant documents.
             max_iter (int, optional): The maximum number of iterations for the RAG process. Defaults to 4.
+            early_stopping (bool, optional): Whether to use early stopping. Defaults to False.
             route_collection (bool, optional): Whether to route the query to specific collections. Defaults to True.
             text_window_splitter (bool, optional): Whether use text_window splitter. Defaults to True.
         """
@@ -111,6 +112,7 @@ class ChainOfRAG(RAGAgent):
         self.embedding_model = embedding_model
         self.vector_db = vector_db
         self.max_iter = max_iter
+        self.early_stopping = early_stopping
         self.route_collection = route_collection
         if self.route_collection:
             self.collection_router = CollectionRouter(llm=self.llm, vector_db=self.vector_db)
@@ -191,6 +193,26 @@ class ChainOfRAG(RAGAgent):
             token_usage = chat_response.total_tokens
         return supported_retrieved_results, token_usage
 
+    def _check_has_enough_info(
+        self, query: str, intermediate_contexts: List[str]
+    ) -> Tuple[bool, int]:
+        if not intermediate_contexts:
+            return False, 0
+
+        chat_response = self.llm.chat(
+            [
+                {
+                    "role": "user",
+                    "content": REFLECTION_PROMPT.format(
+                        query=query,
+                        intermediate_context="\n".join(intermediate_contexts),
+                    ),
+                }
+            ]
+        )
+        has_enough_info = chat_response.content.strip().lower() == "yes"
+        return has_enough_info, chat_response.total_tokens
+
     def retrieve(self, query: str, **kwargs) -> Tuple[List[RetrievalResult], int, dict]:
         """
         Retrieves relevant documents based on the input query and iteratively refines the search.
@@ -229,6 +251,19 @@ class ChainOfRAG(RAGAgent):
                 f"Intermediate query{intermediate_idx}: {followup_query}\nIntermediate answer{intermediate_idx}: {intermediate_answer}"
             )
             token_usage += n_token0 + n_token1 + n_token2
+
+            if self.early_stopping:
+                has_enough_info, n_token_check = self._check_has_enough_info(
+                    query, intermediate_contexts
+                )
+                token_usage += n_token_check
+
+                if has_enough_info:
+                    log.color_print(
+                        f"<think> Early stopping after iteration {iter + 1}: Have enough information to answer the main query. </think>\n"
+                    )
+                break
+
         all_retrieved_results = deduplicate_results(all_retrieved_results)
         additional_info = {"intermediate_context": intermediate_contexts}
         return all_retrieved_results, token_usage, additional_info
