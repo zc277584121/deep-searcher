@@ -16,12 +16,12 @@ class PPIO(BaseLLM):
         client: The OpenAI-compatible client instance for PPIO API.
     """
 
-    def __init__(self, model: str = "deepseek/deepseek-r1", **kwargs):
+    def __init__(self, model: str = "deepseek/deepseek-r1-turbo", **kwargs):
         """
         Initialize a PPIO language model client.
 
         Args:
-            model (str, optional): The model identifier to use. Defaults to "deepseek/deepseek-r1".
+            model (str, optional): The model identifier to use. Defaults to "deepseek/deepseek-r1-turbo".
             **kwargs: Additional keyword arguments to pass to the OpenAI client.
                 - api_key: PPIO API key. If not provided, uses PPIO_API_KEY environment variable.
                 - base_url: PPIO API base URL. If not provided, defaults to "https://api.ppinfra.com/v3/openai".

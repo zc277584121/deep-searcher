@@ -125,7 +125,7 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (DeepSeek from PPIO)</summary>
     <p> Make sure you have prepared your PPIO API KEY as an env variable <code>PPIO_API_KEY</code>. You can create an API Key <a href="https://ppinfra.com/settings/key-management?utm_source=github_deep-searcher">here</a>. </p>
-    <pre><code>config.set_provider_config("llm", "PPIO", {"model": "deepseek/deepseek-r1"})</code></pre>
+    <pre><code>config.set_provider_config("llm", "PPIO", {"model": "deepseek/deepseek-r1-turbo"})</code></pre>
     <p> More details about PPIO: https://ppinfra.com/docs/get-started/quickstart.html?utm_source=github_deep-searcher </p>
 </details>
 

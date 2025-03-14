@@ -20,7 +20,7 @@ provide_settings:
 
 #    provider: "PPIO"
 #    config:
-#      model: "deepseek/deepseek-r1"
+#      model: "deepseek/deepseek-r1-turbo"
 ##      api_key: "xxxx"  # Uncomment to override the `PPIO_API_KEY` set in the environment variable
 ##      base_url: ""
 
