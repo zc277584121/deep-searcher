@@ -7,6 +7,7 @@ from .openai_llm import OpenAI
 from .ppio import PPIO
 from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
+from .volcengine import Volcengine
 from .xai import XAI
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "XAI",
     "Anthropic",
     "Ollama",
+    "Volcengine",
 ]
