@@ -114,8 +114,7 @@ class ChainOfRAG(RAGAgent):
         self.max_iter = max_iter
         self.early_stopping = early_stopping
         self.route_collection = route_collection
-        if self.route_collection:
-            self.collection_router = CollectionRouter(llm=self.llm, vector_db=self.vector_db)
+        self.collection_router = CollectionRouter(llm=self.llm, vector_db=self.vector_db)
         self.text_window_splitter = text_window_splitter
 
     def _reflect_get_subquery(self, query: str, intermediate_context: List[str]) -> Tuple[str, int]:

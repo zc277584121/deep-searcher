@@ -103,8 +103,7 @@ class DeepSearch(RAGAgent):
         self.vector_db = vector_db
         self.max_iter = max_iter
         self.route_collection = route_collection
-        if self.route_collection:
-            self.collection_router = CollectionRouter(llm=self.llm, vector_db=self.vector_db)
+        self.collection_router = CollectionRouter(llm=self.llm, vector_db=self.vector_db)
         self.text_window_splitter = text_window_splitter
 
     def _generate_sub_queries(self, original_query: str) -> Tuple[List[str], int]:
