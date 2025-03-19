@@ -46,6 +46,10 @@ class GeminiEmbedding(BaseEmbedding):
         self.model = model
         self.client = genai.Client(api_key=api_key, **kwargs)
 
+    def embed_chunks(self, chunks, batch_size: int = 100):
+        # For Gemini free level, the maximum rqeusts in one batch is 100, so set the default batch size to 100
+        return super().embed_chunks(chunks, batch_size)
+
     def _get_dim(self):
         """
         Get the dimension of the embedding model.
@@ -102,12 +106,8 @@ class GeminiEmbedding(BaseEmbedding):
         Returns:
             List[List[float]]: A list of embedding vectors, one for each input text.
         """
-        # For Gemini free level, the maximum rqeusts in one batch is 100, so we need to split the texts again
-        sub_splits = [texts[i : i + 100] for i in range(0, len(texts), 100)]
-        embeddings = []
-        for texts in sub_splits:
-            result = self._embed_content(texts)
-            embeddings.extend([r.values for r in result])
+        result = self._embed_content(texts)
+        embeddings = [r.values for r in result]
         return embeddings
 
     @property

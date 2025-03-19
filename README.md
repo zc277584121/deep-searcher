@@ -198,6 +198,13 @@ result = query("Write a report about xxx.") # Your question here
     <p> More details about Volcengine: https://www.volcengine.com/docs/82379/1302003 </p>
 </details>
 
+<details>
+  <summary>Example (Google Gemini embedding)</summary>
+    <p> Make sure you have prepared your Gemini API KEY as an env variable <code>GEMINI_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("embedding", "GeminiEmbedding", {"model": "text-embedding-004"})</code></pre>
+    <p> You need to install gemini before running, execute: <code>pip install google-genai</code>. More details about Gemini: https://ai.google.dev/gemini-api/docs </p>
+</details>
+
 #### Vector Database Configuration
 <pre><code>config.set_provider_config("vector_db", "(VectorDBName)", "(Arguments dict)")</code></pre>
 <p>The "VectorDBName" can be one of the following: ["Milvus"] (Under development)</p>
