@@ -103,7 +103,9 @@ class DeepSearch(RAGAgent):
         self.vector_db = vector_db
         self.max_iter = max_iter
         self.route_collection = route_collection
-        self.collection_router = CollectionRouter(llm=self.llm, vector_db=self.vector_db)
+        self.collection_router = CollectionRouter(
+            llm=self.llm, vector_db=self.vector_db, dim=embedding_model.dimension
+        )
         self.text_window_splitter = text_window_splitter
 
     def _generate_sub_queries(self, original_query: str) -> Tuple[List[str], int]:
@@ -118,7 +120,9 @@ class DeepSearch(RAGAgent):
     async def _search_chunks_from_vectordb(self, query: str, sub_queries: List[str]):
         consume_tokens = 0
         if self.route_collection:
-            selected_collections, n_token_route = self.collection_router.invoke(query=query)
+            selected_collections, n_token_route = self.collection_router.invoke(
+                query=query, dim=self.embedding_model.dimension
+            )
         else:
             selected_collections = self.collection_router.all_collections
             n_token_route = 0

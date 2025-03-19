@@ -191,10 +191,22 @@ class Milvus(BaseVectorDB):
             List[CollectionInfo]: List of collection information objects.
         """
         collection_infos = []
+        dim = kwargs.pop("dim", 0)
         try:
             collections = self.client.list_collections()
             for collection in collections:
                 description = self.client.describe_collection(collection)
+                if dim != 0:
+                    skip = False
+                    for field_dict in description["fields"]:
+                        if (
+                            field_dict["name"] == "embedding"
+                            and field_dict["type"] == DataType.FLOAT_VECTOR
+                        ):
+                            if field_dict["params"]["dim"] != dim:
+                                skip = True
+                    if skip:
+                        continue
                 collection_infos.append(
                     CollectionInfo(
                         collection_name=collection,
