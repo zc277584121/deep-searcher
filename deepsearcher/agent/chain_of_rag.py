@@ -265,7 +265,7 @@ class ChainOfRAG(RAGAgent):
                     log.color_print(
                         f"<think> Early stopping after iteration {iter + 1}: Have enough information to answer the main query. </think>\n"
                     )
-                break
+                    break
 
         all_retrieved_results = deduplicate_results(all_retrieved_results)
         additional_info = {"intermediate_context": intermediate_contexts}

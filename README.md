@@ -148,6 +148,13 @@ result = query("Write a report about xxx.") # Your question here
     <p> More details about Volcengine: https://www.volcengine.com/docs/82379/1099455?utm_source=github_deep-searcher </p>
 </details>
 
+<details>
+  <summary>Example (GLM)</summary>
+    <p> Make sure you have prepared your GLM API KEY as an env variable <code>GLM_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("llm", "GLM", {"model": "glm-4-plus"})</code></pre>
+    <p> More details about GLM: https://bigmodel.cn/dev/welcome </p>
+</details>
+
 #### Embedding Model Configuration
 <pre><code>config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
 <p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding", "SiliconflowEmbedding"]</p>
@@ -196,6 +203,13 @@ result = query("Write a report about xxx.") # Your question here
     <p> Make sure you have prepared your Volcengine API KEY as an env variable <code>VOLCENGINE_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("embedding", "VolcengineEmbedding", {"model": "doubao-embedding-text-240515"})</code></pre>
     <p> More details about Volcengine: https://www.volcengine.com/docs/82379/1302003 </p>
+</details>
+
+<details>
+  <summary>Example (GLM embedding)</summary>
+    <p> Make sure you have prepared your GLM API KEY as an env variable <code>GLM_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("embedding", "GLMEmbedding", {"model": "embedding-3"})</code></pre>
+    <p> More details about GLM: https://bigmodel.cn/dev/welcome </p>
 </details>
 
 <details>

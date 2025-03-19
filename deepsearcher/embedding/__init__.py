@@ -1,5 +1,6 @@
 from .bedrock_embedding import BedrockEmbedding
 from .gemini_embedding import GeminiEmbedding
+from .glm_embedding import GLMEmbedding
 from .milvus_embedding import MilvusEmbedding
 from .openai_embedding import OpenAIEmbedding
 from .ppio_embedding import PPIOEmbedding
@@ -16,4 +17,5 @@ __all__ = [
     "GeminiEmbedding",
     "PPIOEmbedding",
     "VolcengineEmbedding",
+    "GLMEmbedding",
 ]
