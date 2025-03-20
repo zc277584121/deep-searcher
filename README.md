@@ -152,7 +152,7 @@ result = query("Write a report about xxx.") # Your question here
   <summary>Example (GLM)</summary>
     <p> Make sure you have prepared your GLM API KEY as an env variable <code>GLM_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("llm", "GLM", {"model": "glm-4-plus"})</code></pre>
-    <p> More details about GLM: https://bigmodel.cn/dev/welcome </p>
+    <p> You need to install zhipuai before running, execute: <code>pip install zhipuai</code>. More details about GLM: https://bigmodel.cn/dev/welcome </p>
 </details>
 
 #### Embedding Model Configuration
@@ -209,7 +209,7 @@ result = query("Write a report about xxx.") # Your question here
   <summary>Example (GLM embedding)</summary>
     <p> Make sure you have prepared your GLM API KEY as an env variable <code>GLM_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("embedding", "GLMEmbedding", {"model": "embedding-3"})</code></pre>
-    <p> More details about GLM: https://bigmodel.cn/dev/welcome </p>
+    <p> You need to install zhipuai before running, execute: <code>pip install zhipuai</code>. More details about GLM: https://bigmodel.cn/dev/welcome </p>
 </details>
 
 <details>

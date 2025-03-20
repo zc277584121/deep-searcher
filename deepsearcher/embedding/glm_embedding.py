@@ -1,11 +1,11 @@
 import os
 from typing import List
 
-from openai._types import NOT_GIVEN
-
 from deepsearcher.embedding.base import BaseEmbedding
 
-OPENAI_MODEL_DIM_MAP = {"embedding-3": 2048}
+GLM_MODEL_DIM_MAP = {
+    "embedding-3": 2048,
+}
 
 
 class GLMEmbedding(BaseEmbedding):
@@ -19,7 +19,7 @@ class GLMEmbedding(BaseEmbedding):
         Args:
             model_name (`str`):
         """
-        from openai import OpenAI
+        from zhipuai import ZhipuAI
 
         if "api_key" in kwargs:
             api_key = kwargs.pop("api_key")
@@ -33,21 +33,17 @@ class GLMEmbedding(BaseEmbedding):
             base_url = os.getenv("GLM_BASE_URL", default="https://open.bigmodel.cn/api/paas/v4/")
 
         self.model = model
-        self.client = OpenAI(api_key=api_key, base_url=base_url, **kwargs)
+        self.client = ZhipuAI(api_key=api_key, base_url=base_url, **kwargs)
 
-    def embed_query(self, text: str, dimensions=NOT_GIVEN) -> List[float]:
+    def embed_query(self, text: str) -> List[float]:
         # text = text.replace("\n", " ")
-        return (
-            self.client.embeddings.create(input=[text], model=self.model, dimensions=dimensions)
-            .data[0]
-            .embedding
-        )
+        return self.client.embeddings.create(input=[text], model=self.model).data[0].embedding
 
-    def embed_documents(self, texts: List[str], dimensions=NOT_GIVEN) -> List[List[float]]:
-        res = self.client.embeddings.create(input=texts, model=self.model, dimensions=dimensions)
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        res = self.client.embeddings.create(input=texts, model=self.model)
         res = [r.embedding for r in res.data]
         return res
 
     @property
     def dimension(self) -> int:
-        return OPENAI_MODEL_DIM_MAP[self.model]
+        return GLM_MODEL_DIM_MAP[self.model]

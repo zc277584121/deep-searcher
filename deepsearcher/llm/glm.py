@@ -10,7 +10,7 @@ class GLM(BaseLLM):
     """
 
     def __init__(self, model: str = "glm-4-plus", **kwargs):
-        from openai import OpenAI as OpenAI_
+        from zhipuai import ZhipuAI
 
         self.model = model
         if "api_key" in kwargs:
@@ -21,7 +21,7 @@ class GLM(BaseLLM):
             base_url = kwargs.pop("base_url")
         else:
             base_url = os.getenv("GLM_BASE_URL", default="https://open.bigmodel.cn/api/paas/v4/")
-        self.client = OpenAI_(api_key=api_key, base_url=base_url, **kwargs)
+        self.client = ZhipuAI(api_key=api_key, base_url=base_url, **kwargs)
 
     def chat(self, messages: List[Dict]) -> ChatResponse:
         completion = self.client.chat.completions.create(
