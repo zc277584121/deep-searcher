@@ -192,7 +192,11 @@ class ChainOfRAG(RAGAgent):
                 ]
             )
             supported_doc_indices = self.llm.literal_eval(chat_response.content)
-            supported_retrieved_results = [retrieved_results[i] for i in supported_doc_indices]
+            supported_retrieved_results = [
+                retrieved_results[int(i)]
+                for i in supported_doc_indices
+                if int(i) < len(retrieved_results)
+            ]
             token_usage = chat_response.total_tokens
         return supported_retrieved_results, token_usage
 
