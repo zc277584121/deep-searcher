@@ -2,6 +2,7 @@ from .bedrock_embedding import BedrockEmbedding
 from .gemini_embedding import GeminiEmbedding
 from .glm_embedding import GLMEmbedding
 from .milvus_embedding import MilvusEmbedding
+from .ollama_embedding import OllamaEmbedding
 from .openai_embedding import OpenAIEmbedding
 from .ppio_embedding import PPIOEmbedding
 from .siliconflow_embedding import SiliconflowEmbedding
@@ -18,4 +19,5 @@ __all__ = [
     "PPIOEmbedding",
     "VolcengineEmbedding",
     "GLMEmbedding",
+    "OllamaEmbedding",
 ]

@@ -76,6 +76,12 @@ provide_settings:
 ##       api_key: ""  # Uncomment to override the `GEMINI_API_KEY` set in the environment variable
 ##       dimension: 768 # Uncomment to customize the embedding dimension 
 
+#    provider: "OllamaEmbedding"
+#    config:
+#      model: "bge-m3"
+##       dimension: 1024 # Uncomment to customize the embedding dimension
+
+
   file_loader:
     provider: "PDFLoader"
     config: {}
