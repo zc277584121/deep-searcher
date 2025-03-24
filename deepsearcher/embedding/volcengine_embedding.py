@@ -6,6 +6,8 @@ import requests
 from deepsearcher.embedding.base import BaseEmbedding
 
 VOLCENGINE_MODEL_DIM_MAP = {
+    "doubao-embedding-large-text-240915": 4096,
+    "doubao-embedding-text-240715": 2560,
     "doubao-embedding-text-240515": 2048,
 }
 
@@ -23,13 +25,13 @@ class VolcengineEmbedding(BaseEmbedding):
     https://www.volcengine.com/docs/82379/1302003
     """
 
-    def __init__(self, model="doubao-embedding-text-240515", batch_size=32, **kwargs):
+    def __init__(self, model="doubao-embedding-large-text-240915", batch_size=256, **kwargs):
         """
         Initialize the Volcengine embedding model.
 
         Args:
-            model (str): The model identifier to use for embeddings. Default is "BAAI/bge-m3".
-            batch_size (int): Maximum number of texts to process in a single batch. Default is 32.
+            model (str): The model identifier to use for embeddings. Default is "doubao-embedding-large-text-240915".
+            batch_size (int): Maximum number of texts to process in a single batch. Default is 256.
             **kwargs: Additional keyword arguments.
                 - api_key (str, optional): The Volcengine API key. If not provided,
                   it will be read from the VOLCENGINE_API_KEY environment variable.
@@ -38,7 +40,7 @@ class VolcengineEmbedding(BaseEmbedding):
         Raises:
             RuntimeError: If no API key is provided or found in environment variables.
         """
-        if "model_name" in kwargs and (not model or model == "doubao-embedding-text-240515"):
+        if "model_name" in kwargs and (not model or model == "doubao-embedding-large-text-240915"):
             model = kwargs.pop("model_name")
         self.model = model
         if "api_key" in kwargs:
