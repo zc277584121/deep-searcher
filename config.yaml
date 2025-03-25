@@ -81,6 +81,10 @@ provide_settings:
 #      model: "bge-m3"
 ##       dimension: 1024 # Uncomment to customize the embedding dimension
 
+#    provider: "FastEmbedEmbedding"
+#    config:
+#      model: "BAAI/bge-small-en-v1.5"
+
 
   file_loader:
     provider: "PDFLoader"

@@ -1,4 +1,5 @@
 from .bedrock_embedding import BedrockEmbedding
+from .fastembed_embdding import FastEmbedEmbedding
 from .gemini_embedding import GeminiEmbedding
 from .glm_embedding import GLMEmbedding
 from .milvus_embedding import MilvusEmbedding
@@ -20,4 +21,5 @@ __all__ = [
     "VolcengineEmbedding",
     "GLMEmbedding",
     "OllamaEmbedding",
+    "FastEmbedEmbedding",
 ]
