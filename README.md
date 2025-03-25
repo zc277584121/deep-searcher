@@ -401,6 +401,7 @@ nest_asyncio.apply()
 - [OpenAI](https://platform.openai.com/docs/guides/embeddings/use-cases) (`OPENAI_API_KEY` env variable required)
 - [VoyageAI](https://docs.voyageai.com/embeddings/) (`VOYAGE_API_KEY` env variable required)
 - [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/) (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` env variable required)
+- [FastEmbed](https://qdrant.github.io/fastembed/)
 
 ### 🔹 LLM Support
 - [OpenAI](https://platform.openai.com/docs/models) (`OPENAI_API_KEY` env variable required)
@@ -422,8 +423,10 @@ nest_asyncio.apply()
   - [FireCrawl](https://docs.firecrawl.dev/introduction) (`FIRECRAWL_API_KEY` env variable required)
   - [Jina Reader](https://jina.ai/reader/) (`JINA_API_TOKEN` env variable required)
   - [Crawl4AI](https://docs.crawl4ai.com/) (You should run command `crawl4ai-setup` for the first time)
+
 ### 🔹 Vector Database Support
 - [Milvus](https://milvus.io/) (the same as [Zilliz](https://www.zilliz.com/))
+- [Qdrant](https://qdrant.tech/)
 
 ---
 ## 📊 Evaluation 

@@ -136,6 +136,13 @@ provide_settings:
   #     wallet_location: ""
   #     wallet_password: ""
 
+  # vector_db:      
+  #   provider: "Qdrant"
+  #   config:
+  #     default_collection: "deepsearcher"
+  #     host: "localhost"
+  #     port: 6333
+
 query_settings:
   max_iter: 3
 
