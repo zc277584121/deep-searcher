@@ -29,7 +29,7 @@ class BedrockEmbedding(BaseEmbedding):
     various embedding models for text processing, including Amazon Titan and Cohere models.
     """
 
-    def __init__(self, model: str = DEFAULT_MODEL_ID, **kwargs):
+    def __init__(self, model: str = DEFAULT_MODEL_ID, region_name: str = "us-east-1", **kwargs):
         """
         Initialize the Amazon Bedrock embedding model.
 
@@ -66,7 +66,7 @@ class BedrockEmbedding(BaseEmbedding):
         # TODO: initiate boto3 client
         self.client = boto3.client(
             "bedrock-runtime",
-            region_name="us-east-1",  # FIXME: allow users to specify
+            region_name=region_name,
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
         )
