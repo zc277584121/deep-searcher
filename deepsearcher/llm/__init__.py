@@ -1,5 +1,6 @@
 from .anthropic_llm import Anthropic
 from .azure_openai import AzureOpenAI
+from .bedrock import Bedrock
 from .deepseek import DeepSeek
 from .gemini import Gemini
 from .glm import GLM
@@ -24,4 +25,5 @@ __all__ = [
     "Ollama",
     "Volcengine",
     "GLM",
+    "Bedrock",
 ]
