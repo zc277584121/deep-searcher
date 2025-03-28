@@ -17,7 +17,7 @@ class OllamaEmbedding(BaseEmbedding):
     various embedding models for text processing.
     """
 
-    def __init__(self, model="bge-m3", **kwargs):
+    def __init__(self, model="bge-m3", batch_size=32, **kwargs):
         """
         Initialize the Ollama embedding model.
 
@@ -46,6 +46,7 @@ class OllamaEmbedding(BaseEmbedding):
             dimension = OLLAMA_MODEL_DIM_MAP[model]
         self.dim = dimension
         self.client = Client(host=base_url)
+        self.batch_size = batch_size
 
     def embed_query(self, text: str) -> List[float]:
         """

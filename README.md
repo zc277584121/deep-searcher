@@ -440,7 +440,7 @@ nest_asyncio.apply()
   - [Crawl4AI](https://docs.crawl4ai.com/) (You should run command `crawl4ai-setup` for the first time)
 
 ### 🔹 Vector Database Support
-- [Milvus](https://milvus.io/) (the same as [Zilliz](https://www.zilliz.com/))
+- [Milvus](https://milvus.io/) and [Zilliz Cloud](https://www.zilliz.com/) (fully managed Milvus)
 - [Qdrant](https://qdrant.tech/)
 
 ---
