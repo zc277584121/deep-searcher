@@ -31,26 +31,23 @@ python evaluate.py --help
 ## Evaluation Results  
 We conducted tests using the commonly used 2WikiMultiHopQA dataset. (Due to the high consumption of API tokens for testing, we only tested the first 50 samples. This may introduce some fluctuations compared to testing the entire dataset, but it can still roughly reflect the general landscape of performance.)
 
-### Comparison of Recall with naive RAG
+### Recall Comparison between Naive RAG and DeepSearcher with Different Models
 With Max Iterations on the horizontal axis and Recall on the vertical axis, the following chart compares the recall rates of Deep Searcher and naive RAG.
 ![](plot_results/max_iter_vs_recall.png)
-As we can see, as the number of Max Iterations increases, the recall performance of Deep Searcher improves significantly. And all the results from Deep Searcher are significantly higher than those from naive RAG.
+#### Performance Improvement with Iterations
+As we can see, as the number of Max Iterations increases, the recall performance of Deep Searcher improves significantly. And all the model results from Deep Searcher are significantly higher than those from naive RAG.
 
+#### Diminishing Returns
 However, it is also evident that as the number of iterations gradually increases, the marginal gains decrease, indicating that there may be a certain limit reached after increasing the feedback iterations, and further feedback might not yield significantly better results.
 
-### Token Consumption
-We plotted the graph below with the number of iterations on the horizontal axis and the total token consumption over 50 iterations on the vertical axis:  
-![](plot_results/max_iter_vs_token_usage.png)  
-It is evident that as the number of iterations increases, the token consumption of Deep Searcher rises linearly. For 4 iterations, the token consumption is approximately 0.3M tokens. Roughly estimating based on OpenAI's GPT-4o-mini rate of $0.60 per 1M output tokens, the average cost per query would be around $0.18 / 50 = $0.0036.  
-
-If we switch to a reasoning model, this cost would likely increase several times due to the higher base price of the reasoning model and the larger number of output tokens generated from it.
-
-### Comparison Between Models
-![](plot_results/LLM_vs_recall.png)
-Compared to OpenAI's official DeepResearch, another notable feature of our Deep Searcher is the ability to switch between models freely. 
-
-In this study, we also tested various reasoning models and non-reasoning models (such as gpt-4o-mini). 
-It is evident that Claude 3.7 Sonnet performed the best, although the margin is not substantial. Of course, since our sample number for testing is limited, the results of each test may vary somewhat. 
+#### Model Performance Comparison
+Claude-3-7-sonnet (red line) demonstrates superior performance throughout, achieving nearly perfect recall at 7 iterations. Most models show significant improvement as iterations increase, with the steepest gains occurring between 2-4 iterations. Models like o1-mini (yellow) and deepseek-r1 (green) exhibit strong performance at higher iteration counts. Since our sample number for testing is limited, the results of each test may vary somewhat. 
 Overall, reasoning models generally perform better than non-reasoning models. 
 
+#### Limitations of Non-Reasoning Models
 Additionally, in our tests, weaker and smaller non-reasoning models sometimes failed to complete the entire agent query pipeline, due to their inadequate instruction-following capabilities.
+
+### Token Consumption
+We plotted the graph below with the number of iterations on the horizontal axis and the average token consumption per sample on the vertical axis:  
+![](plot_results/max_iter_vs_avg_token_usage.png)  
+It is evident that as the number of iterations increases, the token consumption of Deep Searcher rises linearly. Based on this approximate token consumption, you can check the pricing on your model provider's website to estimate the cost of running evaluations with different iteration settings.
