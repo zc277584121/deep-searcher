@@ -57,6 +57,17 @@ class CollectionRouter(BaseAgent):
         """
         consume_tokens = 0
         collection_infos = self.vector_db.list_collections(dim=dim)
+        if len(collection_infos) == 0:
+            log.warning(
+                "No collections found in the vector database. Please check the database connection."
+            )
+            return [], 0
+        if len(collection_infos) == 1:
+            the_only_collection = collection_infos[0].collection_name
+            log.color_print(
+                f"<think> Perform search [{query}] on the vector DB collection: {the_only_collection} </think>\n"
+            )
+            return [the_only_collection], 0
         vector_db_search_prompt = COLLECTION_ROUTE_PROMPT.format(
             question=query,
             collection_info=[
