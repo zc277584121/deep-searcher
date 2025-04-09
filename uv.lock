@@ -435,7 +435,7 @@ wheels = [
 
 [[package]]
 name = "deepsearcher"
-version = "0.0.1rc3"
+version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "argparse" },
