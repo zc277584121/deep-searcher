@@ -5,7 +5,7 @@ from typing import List
 from langchain_core.documents import Document
 
 from deepsearcher.loader.file_loader.base import BaseLoader
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 
 
 class UnstructuredLoader(BaseLoader):

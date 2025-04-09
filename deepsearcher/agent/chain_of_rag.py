@@ -4,7 +4,7 @@ from deepsearcher.agent.base import RAGAgent, describe_class
 from deepsearcher.agent.collection_router import CollectionRouter
 from deepsearcher.embedding.base import BaseEmbedding
 from deepsearcher.llm.base import BaseLLM
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 from deepsearcher.vector_db import RetrievalResult
 from deepsearcher.vector_db.base import BaseVectorDB, deduplicate_results
 

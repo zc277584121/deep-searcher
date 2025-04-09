@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple
 
 from deepsearcher.agent import RAGAgent
 from deepsearcher.llm.base import BaseLLM
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 from deepsearcher.vector_db import RetrievalResult
 
 RAG_ROUTER_PROMPT = """Given a list of agent indexes and corresponding descriptions, each agent has a specific function. 

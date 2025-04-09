@@ -1,5 +1,5 @@
 import unittest
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 
 class TestLog(unittest.TestCase):
     def test_log(self):

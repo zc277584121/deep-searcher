@@ -1,6 +1,6 @@
 import unittest
 from deepsearcher.agent import prompt
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 
 class TestPrompt(unittest.TestCase):
     def setUp(self):

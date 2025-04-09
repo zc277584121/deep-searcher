@@ -4,7 +4,7 @@ from typing import List
 from langchain_core.documents import Document
 
 from deepsearcher.loader.web_crawler.base import BaseCrawler
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 
 
 class Crawl4AICrawler(BaseCrawler):

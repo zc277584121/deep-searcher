@@ -4,7 +4,7 @@ from deepsearcher.agent.base import RAGAgent
 from deepsearcher.agent.collection_router import CollectionRouter
 from deepsearcher.embedding.base import BaseEmbedding
 from deepsearcher.llm.base import BaseLLM
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 from deepsearcher.vector_db.base import BaseVectorDB, RetrievalResult, deduplicate_results
 
 SUMMARY_PROMPT = """You are a AI content analysis expert, good at summarizing content. Please summarize a specific and detailed answer or report based on the previous queries and the retrieved document chunks.

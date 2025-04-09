@@ -2,7 +2,7 @@ import unittest
 import pprint
 import numpy as np
 from deepsearcher.vector_db import Milvus, RetrievalResult
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 
 class TestMilvus(unittest.TestCase):
     def test_milvus(self):

@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 import numpy as np
 
 from deepsearcher.loader.splitter import Chunk
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
 
 

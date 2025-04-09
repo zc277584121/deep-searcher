@@ -4,7 +4,7 @@ import numpy as np
 from pymilvus import DataType, MilvusClient
 
 from deepsearcher.loader.splitter import Chunk
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
 
 

@@ -6,7 +6,7 @@ import warnings
 from deepsearcher.configuration import Configuration, init_config
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
 from deepsearcher.online_query import query
-from deepsearcher.tools import log
+from deepsearcher.utils import log
 
 httpx_logger = logging.getLogger("httpx")  # disable openai's logger output
 httpx_logger.setLevel(logging.WARNING)
