@@ -35,7 +35,7 @@ Our CI pipeline also runs these checks automatically on all pull requests to ens
 
 DeepSearcher uses [uv](https://github.com/astral-sh/uv) as the recommended package manager. uv is a fast, reliable Python package manager and installer. The project's `pyproject.toml` is configured to work with uv, which will provide faster dependency resolution and package installation compared to traditional tools.
 
-### Install Project in Development Mode
+### Install Project in Development Mode(aka Editable Installation)
 
 1. Install uv if you haven't already:
    Follow the [offical installation instructions](https://docs.astral.sh/uv/getting-started/installation/).
@@ -44,26 +44,23 @@ DeepSearcher uses [uv](https://github.com/astral-sh/uv) as the recommended packa
    ```shell
    git clone https://github.com/zilliztech/deep-searcher.git && cd deep-searcher
    ```
-3. Create and activate a virtual environment
+3. Synchronize and install dependencies:
    ```shell
-   uv venv
+   uv sync
    source .venv/bin/activate
    ```
-4. Install development dependencies:
-   ```shell
-   uv pip install -e .
-   ```
+   `uv sync` will install all dependencies specified in `uv.lock` file. And the `source .venv/bin/activate` command will activate the virtual environment.
 
-   (Optional) To install all optional dependencies:
-   ```shell
-   uv pip install -e ".[all]"
-   ```
+   - (Optional) To install all optional dependencies:
+      ```shell
+      uv sync --all-extras --dev
+      ```
 
-   (Optional) To install specific optional dependencies:
-   ```shell
-   # Take optional `ollama` dependency for example
-   uv pip install -e ".[ollama]"
-   ```
+   - (Optional) To install specific optional dependencies:
+      ```shell
+      # Take optional `ollama` dependency for example
+      uv sync --extra ollama
+      ```
    For more optional dependencies, refer to the `[project.optional-dependencies]` part of `pyproject.toml` file.
 
 

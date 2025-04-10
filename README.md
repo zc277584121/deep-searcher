@@ -44,28 +44,17 @@ For optional dependencies, e.g., ollama:
 pip install "deepsearcher[ollama]"
 ```
 
-#### Option 2: Using uv (recommended)
-We recommend using [uv](https://github.com/astral-sh/uv) for faster and more reliable installation:
+#### Option 2: Install in Development Mode
+We recommend using [uv](https://github.com/astral-sh/uv) for faster and more reliable installation. Follow the [offical installation instructions](https://docs.astral.sh/uvgetting-started/installation/) to install it.
 
-Create and activate a virtual environment
-```bash
-uv venv
-source .venv/bin/activate
-```
-Install DeepSearcher
-```bash
-uv pip install deepsearcher
-```
-
-If you want to install it in a development mode:
-```bash
+Clone the repository and navigate to the project directory:
+```shell
 git clone https://github.com/zilliztech/deep-searcher.git && cd deep-searcher
-uv pip install -e .
 ```
-
-For optional dependencies with uv, e.g., ollama:
-```bash
-uv pip install "deepsearcher[ollama]"
+Synchronize and install dependencies:
+```shell
+uv sync
+source .venv/bin/activate
 ```
 
 For more detailed development setup and optional dependency installation options, see [CONTRIBUTING.md](CONTRIBUTING.md#development-environment-setup-with-uv).

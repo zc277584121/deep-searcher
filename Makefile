@@ -1,7 +1,7 @@
 lint:
-	ruff format --diff
-	ruff check
+	uv run ruff format --diff
+	uv run ruff check
 
 format:
-	ruff format
-	ruff check --fix
+	uv run ruff format
+	uv run ruff check --fix
