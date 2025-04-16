@@ -41,6 +41,11 @@ provide_settings:
 #      model: "qwq"
 ##      base_url: ""
 
+#    provider: "Novita"
+#    config:
+#      model: "deepseek/deepseek-v3-0324"
+##      api_key: "sk_xxxxxx"  # Uncomment to override the `NOVITA_API_KEY` set in the environment variable
+
   embedding:
     provider: "OpenAIEmbedding"
     config:
@@ -84,6 +89,11 @@ provide_settings:
 #    provider: "FastEmbedEmbedding"
 #    config:
 #      model: "BAAI/bge-small-en-v1.5"
+
+#    provider: "NovitaEmbedding"
+#    config:
+#      model: "baai/bge-m3"
+##      api_key: "sk_xxxxxx"  # Uncomment to override the `NOVITA_API_KEY` set in the environment variable
 
 
   file_loader:

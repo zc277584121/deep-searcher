@@ -41,6 +41,12 @@ provide_settings:
 #      model: "qwq"
 ##      base_url: ""
 
+#    provider: "Novita"
+#    config:
+#      model: "deepseek/deepseek-v3-0324"
+##      api_key: "xxxx"  # Uncomment to override the `NOVITA_API_KEY` set in the environment variable
+##      base_url: ""
+
   embedding:
     provider: "OpenAIEmbedding"
     config:
@@ -67,6 +73,11 @@ provide_settings:
 #    config:
 #      model: "BAAI/bge-m3"
 # .    api_key: ""   # Uncomment to override the `SILICONFLOW_API_KEY` set in the environment variable   
+
+#    provider: "NovitaEmbedding"
+#    config:
+#      model: "baai/bge-m3"
+# .    api_key: ""   # Uncomment to override the `NOVITA_API_KEY` set in the environment variable   
 
   file_loader:
 #    provider: "PDFLoader"

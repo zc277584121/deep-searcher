@@ -3,6 +3,7 @@ from .fastembed_embdding import FastEmbedEmbedding
 from .gemini_embedding import GeminiEmbedding
 from .glm_embedding import GLMEmbedding
 from .milvus_embedding import MilvusEmbedding
+from .novita_embedding import NovitaEmbedding
 from .ollama_embedding import OllamaEmbedding
 from .openai_embedding import OpenAIEmbedding
 from .ppio_embedding import PPIOEmbedding
@@ -22,4 +23,5 @@ __all__ = [
     "GLMEmbedding",
     "OllamaEmbedding",
     "FastEmbedEmbedding",
+    "NovitaEmbedding",
 ]

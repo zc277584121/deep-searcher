@@ -4,6 +4,7 @@ from .bedrock import Bedrock
 from .deepseek import DeepSeek
 from .gemini import Gemini
 from .glm import GLM
+from .novita import Novita
 from .ollama import Ollama
 from .openai_llm import OpenAI
 from .ppio import PPIO
@@ -26,4 +27,5 @@ __all__ = [
     "Volcengine",
     "GLM",
     "Bedrock",
+    "Novita",
 ]
