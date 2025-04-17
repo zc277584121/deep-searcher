@@ -185,6 +185,13 @@ result = query("Write a report about xxx.") # Your question here
     <p> You need to install boto3 before running, execute: <code>pip install boto3</code>. More details about Amazon Bedrock: https://docs.aws.amazon.com/bedrock/ </p>
 </details>
 
+<details>
+  <summary>Example (Aliyun Bailian)</summary>
+    <p> Make sure you have prepared your Bailian API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "deepseek-r1", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"})</code></pre>
+    <p> More details about Aliyun Bailian models: https://bailian.console.aliyun.com </p>
+</details>
+
 #### Embedding Model Configuration
 <pre><code>config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
 <p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding", "SiliconflowEmbedding", "PPIOEmbedding", "NovitaEmbedding"]</p>
