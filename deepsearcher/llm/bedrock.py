@@ -19,7 +19,7 @@ class Bedrock(BaseLLM):
 
     def __init__(
         self,
-        model_id: str = "us.deepseek.r1-v1:0",
+        model: str = "us.deepseek.r1-v1:0",
         max_tokens: int = 20000,
         region_name: str = "us-west-2",
         **kwargs,
@@ -28,7 +28,7 @@ class Bedrock(BaseLLM):
         Initialize an AWS Bedrock language model client.
 
         Args:
-            model_id (str, optional): The model identifier to use. Defaults to "us.deepseek.r1-v1:0".
+            model (str, optional): The model identifier to use. Defaults to "us.deepseek.r1-v1:0".
             max_tokens (int, optional): The maximum number of tokens to generate. Defaults to 2000.
             region_name (str, optional): AWS region for the Bedrock service. Defaults to "us-west-2".
             **kwargs: Additional keyword arguments to pass to the boto3 client.
@@ -38,7 +38,7 @@ class Bedrock(BaseLLM):
         """
         import boto3
 
-        self.model_id = model_id
+        self.model = model
         self.max_tokens = max_tokens
 
         # Extract AWS credentials if provided
@@ -78,7 +78,7 @@ class Bedrock(BaseLLM):
                 formatted_messages.append(message)
 
         response = self.client.converse(
-            modelId=self.model_id,
+            modelId=self.model,
             messages=formatted_messages,
             inferenceConfig={
                 "maxTokens": self.max_tokens,
