@@ -192,8 +192,8 @@ result = query("Write a report about xxx.") # Your question here
 
 <details>
   <summary>Example (Aliyun Bailian)</summary>
-    <p> Make sure you have prepared your Bailian API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "deepseek-r1", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"})</code></pre>
+    <p> Make sure you have prepared your Bailian API KEY as an env variable <code>DASHSCOPE_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("llm", "Aliyun", {"model": "deepseek-r1"})</code></pre>
     <p> More details about Aliyun Bailian models: https://bailian.console.aliyun.com </p>
 </details>
 

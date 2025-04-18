@@ -1,3 +1,4 @@
+from .aliyun import Aliyun
 from .anthropic_llm import Anthropic
 from .azure_openai import AzureOpenAI
 from .bedrock import Bedrock
@@ -28,4 +29,5 @@ __all__ = [
     "GLM",
     "Bedrock",
     "Novita",
+    "Aliyun",
 ]
