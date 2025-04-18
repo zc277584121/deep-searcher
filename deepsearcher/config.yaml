@@ -110,6 +110,10 @@ provide_settings:
 #    provider: "UnstructuredLoader"
 #    config: {}
 
+#    provider: "DoclingLoader"
+#    config: {}
+
+
   web_crawler:
     provider: "FireCrawlCrawler"
     config: {}
@@ -124,8 +128,11 @@ provide_settings:
     #     viewport_width: 800
     #     viewport_height: 600
     
-#    provider: "JinaCrawler"
-#    config: {}
+    #    provider: "JinaCrawler"
+    #    config: {}
+
+    #    provider: "DoclingCrawler"
+    #    config: {}
 
   vector_db:
     provider: "Milvus"

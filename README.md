@@ -321,10 +321,35 @@ result = query("Write a report about xxx.") # Your question here
 
 <details>
   <summary>Example (Unstructured)</summary>
-    <p> Make sure you have prepared your Unstructured API KEY and API URL as env variables <code>UNSTRUCTURED_API_KEY</code> and <code>UNSTRUCTURED_API_URL</code>.</p>
+    <p>You can use Unstructured in two ways:</p>
+    <ul>
+      <li>With API: Set environment variables <code>UNSTRUCTURED_API_KEY</code> and <code>UNSTRUCTURED_API_URL</code></li>
+      <li>Without API: Use the local processing mode by simply not setting these environment variables</li>
+    </ul>
     <pre><code>config.set_provider_config("file_loader", "UnstructuredLoader", {})</code></pre>
-    <p> Currently supported file types: ["pdf"] (Under development) </p>
-    <p> You need to install unstructured-ingest before running, execute: <code>pip install unstructured-ingest</code>. More details about Unstructured: https://docs.unstructured.io/ingestion/overview </p>
+    <ul>
+      <li>Currently supported file types: ["pdf"] (Under development)</li>
+      <li>Installation requirements:
+        <ul>
+          <li>Install ingest pipeline: <code>pip install unstructured-ingest</code></li>
+          <li>For all document formats: <code>pip install "unstructured[all-docs]"</code></li>
+          <li>For specific formats (e.g., PDF only): <code>pip install "unstructured[pdf]"</code></li>
+        </ul>
+      </li>
+      <li>More information:
+        <ul>
+          <li>Unstructured documentation: <a href="https://docs.unstructured.io/ingestion/overview">https://docs.unstructured.io/ingestion/overview</a></li>
+          <li>Installation guide: <a href="https://docs.unstructured.io/open-source/installation/full-installation">https://docs.unstructured.io/open-source/installation/full-installation</a></li>
+        </ul>
+      </li>
+    </ul>
+</details>
+
+<details>
+  <summary>Example (Docling)</summary>
+    <pre><code>config.set_provider_config("file_loader", "DoclingLoader", {})</code></pre>
+    <p> Currently supported file types: please refer to the Docling documentation: https://docling-project.github.io/docling/usage/supported_formats/#supported-output-formats </p>
+    <p> You need to install docling before running, execute: <code>pip install docling</code>. More details about Docling: https://docling-project.github.io/docling/ </p>
 </details>
 
 #### Web Crawler Configuration
@@ -351,6 +376,13 @@ result = query("Write a report about xxx.") # Your question here
     <p> Make sure you have prepared your Jina Reader API KEY as an env variable <code>JINA_API_TOKEN</code> or <code>JINAAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("web_crawler", "JinaCrawler", {})</code></pre>
     <p> More details about Jina Reader: https://jina.ai/reader/ </p>
+</details>
+
+<details>
+  <summary>Example (Docling)</summary>
+    <pre><code>config.set_provider_config("web_crawler", "DoclingCrawler", {})</code></pre>
+    <p> Currently supported file types: please refer to the Docling documentation: https://docling-project.github.io/docling/usage/supported_formats/#supported-output-formats </p>
+    <p> You need to install docling before running, execute: <code>pip install docling</code>. More details about Docling: https://docling-project.github.io/docling/ </p>
 </details>
 
 

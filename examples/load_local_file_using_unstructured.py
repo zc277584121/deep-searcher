@@ -7,7 +7,7 @@ from deepsearcher.configuration import Configuration, init_config
 # Suppress unnecessary logging from third-party libraries
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-# Set API keys (ensure these are set securely in real applications)
+# (Optional) Set API keys (ensure these are set securely in real applications)
 os.environ['UNSTRUCTURED_API_KEY'] = '***************'
 os.environ['UNSTRUCTURED_API_URL'] = '***************'
 

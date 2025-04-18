@@ -38,17 +38,30 @@ class UnstructuredLoader(BaseLoader):
             A list of Document objects extracted from the processed files.
 
         Note:
-            Requires environment variables UNSTRUCTURED_API_KEY and UNSTRUCTURED_API_URL to be set.
+            If UNSTRUCTURED_API_KEY and UNSTRUCTURED_API_URL environment variables are set,
+            the API-based partitioning will be used. Otherwise, local partitioning will be used.
         """
-        from unstructured_ingest.v2.interfaces import ProcessorConfig
-        from unstructured_ingest.v2.pipeline.pipeline import Pipeline
-        from unstructured_ingest.v2.processes.connectors.local import (
+        from unstructured_ingest.interfaces import ProcessorConfig
+        from unstructured_ingest.pipeline.pipeline import Pipeline
+        from unstructured_ingest.processes.connectors.local import (
             LocalConnectionConfig,
             LocalDownloaderConfig,
             LocalIndexerConfig,
             LocalUploaderConfig,
         )
-        from unstructured_ingest.v2.processes.partitioner import PartitionerConfig
+        from unstructured_ingest.processes.partitioner import PartitionerConfig
+
+        # Check if API environment variables are set
+        api_key = os.getenv("UNSTRUCTURED_API_KEY")
+        api_url = os.getenv("UNSTRUCTURED_API_URL")
+        use_api = api_key is not None and api_url is not None
+
+        if use_api:
+            log.color_print("Using Unstructured API for document processing")
+        else:
+            log.color_print(
+                "Using local processing for documents (UNSTRUCTURED_API_KEY or UNSTRUCTURED_API_URL not set)"
+            )
 
         Pipeline.from_configs(
             context=ProcessorConfig(),
@@ -56,14 +69,10 @@ class UnstructuredLoader(BaseLoader):
             downloader_config=LocalDownloaderConfig(),
             source_connection_config=LocalConnectionConfig(),
             partitioner_config=PartitionerConfig(
-                partition_by_api=True,
-                api_key=os.getenv("UNSTRUCTURED_API_KEY"),
-                partition_endpoint=os.getenv("UNSTRUCTURED_API_URL"),
+                partition_by_api=use_api,
+                api_key=api_key,
+                partition_endpoint=api_url,
                 strategy="hi_res",
-                additional_partition_args={
-                    "split_pdf_page": True,
-                    "split_pdf_concurrency_level": 15,
-                },
             ),
             uploader_config=LocalUploaderConfig(output_dir=self.directory_with_results),
         ).run()
@@ -116,15 +125,77 @@ class UnstructuredLoader(BaseLoader):
         return self.load_pipeline(directory)
 
     @property
-    def supported_file_types(self) -> List[str]:  # TODO
+    def supported_file_types(self) -> List[str]:
         """
-        Get the list of file extensions supported by this loader.
+        Get the list of file extensions supported by the unstructured-io library. Please refer to the Unstructured documentation for more details: https://docs.unstructured.io/ui/supported-file-types.
 
         Returns:
-            A list of supported file extensions: ["pdf"].
+            A comprehensive list of supported file extensions.
 
         Note:
-            This is currently limited to PDF files, but the unstructured-io library
-            supports many more formats that could be added in the future.
+            The unstructured-io library supports a wide range of document formats
+            including office documents, images, emails, and more.
         """
-        return ["pdf"]
+        return [
+            "abw",
+            "bmp",
+            "csv",
+            "cwk",
+            "dbf",
+            "dif",
+            "doc",
+            "docm",
+            "docx",
+            "dot",
+            "dotm",
+            "eml",
+            "epub",
+            "et",
+            "eth",
+            "fods",
+            "gif",
+            "heic",
+            "htm",
+            "html",
+            "hwp",
+            "jpeg",
+            "jpg",
+            "md",
+            "mcw",
+            "mw",
+            "odt",
+            "org",
+            "p7s",
+            "pages",
+            "pbd",
+            "pdf",
+            "png",
+            "pot",
+            "potm",
+            "ppt",
+            "pptm",
+            "pptx",
+            "prn",
+            "rst",
+            "rtf",
+            "sdp",
+            "sgl",
+            "svg",
+            "sxg",
+            "tiff",
+            "txt",
+            "tsv",
+            "uof",
+            "uos1",
+            "uos2",
+            "web",
+            "webp",
+            "wk2",
+            "xls",
+            "xlsb",
+            "xlsm",
+            "xlsx",
+            "xlw",
+            "xml",
+            "zabw",
+        ]
