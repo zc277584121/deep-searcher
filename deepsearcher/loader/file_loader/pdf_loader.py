@@ -39,7 +39,7 @@ class PDFLoader(BaseLoader):
                 page_content = "\n\n".join([page.extract_text() for page in file.pages])
                 return [Document(page_content=page_content, metadata={"reference": file_path})]
         elif file_path.endswith(".txt") or file_path.endswith(".md"):
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 page_content = file.read()
                 return [Document(page_content=page_content, metadata={"reference": file_path})]
 
