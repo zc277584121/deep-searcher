@@ -29,7 +29,7 @@ class TextLoader(BaseLoader):
         Returns:
             A list containing a single Document object with the file content and reference.
         """
-        with open(file_path, "r") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             return [Document(page_content=f.read(), metadata={"reference": file_path})]
 
     @property
