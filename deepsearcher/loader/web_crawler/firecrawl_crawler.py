@@ -55,9 +55,12 @@ class FireCrawlCrawler(BaseCrawler):
         # if user just inputs a single url as param
         # scrape single page
         if max_depth is None and limit is None and allow_backward_links is None:
-            scrape_result = self.app.scrape_url(url=url, params={"formats": ["markdown"]})
-            markdown_content = scrape_result.get("markdown", "")
-            metadata = scrape_result.get("metadata", {})
+            # Call the new Firecrawl API, passing formats directly
+            scrape_response = self.app.scrape_url(url=url, formats=["markdown"])
+            # Convert Pydantic BaseModel to dict
+            resp_dict = scrape_response.dict()
+            markdown_content = resp_dict.get("markdown", "")
+            metadata = resp_dict.get("metadata", {})
             metadata["reference"] = url
             return [Document(page_content=markdown_content, metadata=metadata)]
 
@@ -72,13 +75,18 @@ class FireCrawlCrawler(BaseCrawler):
             ),
         }
 
-        crawl_status = self.app.crawl_url(url=url, params=crawl_params)
-        data = crawl_status.get("data", [])
+        # Call the new Firecrawl API, flattening parameters
+        crawl_response = self.app.crawl_url(url=url, **crawl_params)
+        # Convert Pydantic BaseModel to dict
+        crawl_dict = crawl_response.dict()
+        data = crawl_dict.get("data", [])
 
         documents = []
         for item in data:
-            markdown_content = item.get("markdown", "")
-            metadata = item.get("metadata", {})
+            # Support items that are either dicts or Pydantic sub-models
+            item_dict = item.dict() if hasattr(item, "dict") else item
+            markdown_content = item_dict.get("markdown", "")
+            metadata = item_dict.get("metadata", {})
             metadata["reference"] = metadata.get("url", url)
             documents.append(Document(page_content=markdown_content, metadata=metadata))
 
