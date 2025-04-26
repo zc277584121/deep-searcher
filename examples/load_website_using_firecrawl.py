@@ -36,6 +36,7 @@ def main():
     # Step 3: Query the loaded data
     question = "What is Milvus?"  # Replace with your actual question
     result = query(question)
+    print(result)
 
 
 if __name__ == "__main__":

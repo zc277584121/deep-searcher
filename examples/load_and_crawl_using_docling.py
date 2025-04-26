@@ -67,6 +67,7 @@ def main():
     # Step 3: Query the loaded data
     question = "What is Milvus?"
     result = query(question)
+    print(result)
 
 
 if __name__ == "__main__":
