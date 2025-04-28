@@ -1,7 +1,7 @@
 import os
 from typing import List, Optional
 
-from firecrawl import FirecrawlApp
+from firecrawl import FirecrawlApp, ScrapeOptions
 from langchain_core.documents import Document
 
 from deepsearcher.loader.web_crawler.base import BaseCrawler
@@ -48,7 +48,6 @@ class FireCrawlCrawler(BaseCrawler):
         Returns:
             List[Document]: List of Document objects with page content and metadata.
         """
-
         # Lazy init
         self.app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
 
@@ -57,37 +56,33 @@ class FireCrawlCrawler(BaseCrawler):
         if max_depth is None and limit is None and allow_backward_links is None:
             # Call the new Firecrawl API, passing formats directly
             scrape_response = self.app.scrape_url(url=url, formats=["markdown"])
-            # Convert Pydantic BaseModel to dict
-            resp_dict = scrape_response.dict()
-            markdown_content = resp_dict.get("markdown", "")
-            metadata = resp_dict.get("metadata", {})
-            metadata["reference"] = url
-            return [Document(page_content=markdown_content, metadata=metadata)]
+            data = scrape_response.model_dump()
+            return [
+                Document(
+                    page_content=data.get("markdown", ""),
+                    metadata={"reference": url, **data.get("metadata", {})},
+                )
+            ]
 
         # else, crawl multiple pages based on users' input params
         # set default values if not provided
-        crawl_params = {
-            "scrapeOptions": {"formats": ["markdown"]},
-            "limit": limit if limit is not None else 20,
-            "maxDepth": max_depth if max_depth is not None else 2,
-            "allowBackwardLinks": (
-                allow_backward_links if allow_backward_links is not None else False
-            ),
-        }
+        crawl_response = self.app.crawl_url(
+            url=url,
+            limit=limit or 20,
+            max_depth=max_depth or 2,
+            allow_backward_links=allow_backward_links or False,
+            scrape_options=ScrapeOptions(formats=["markdown"]),
+            poll_interval=5,
+        )
+        items = crawl_response.model_dump().get("data", [])
 
-        # Call the new Firecrawl API, flattening parameters
-        crawl_response = self.app.crawl_url(url=url, **crawl_params)
-        # Convert Pydantic BaseModel to dict
-        crawl_dict = crawl_response.dict()
-        data = crawl_dict.get("data", [])
-
-        documents = []
-        for item in data:
+        documents: List[Document] = []
+        for item in items:
             # Support items that are either dicts or Pydantic sub-models
-            item_dict = item.dict() if hasattr(item, "dict") else item
-            markdown_content = item_dict.get("markdown", "")
-            metadata = item_dict.get("metadata", {})
-            metadata["reference"] = metadata.get("url", url)
-            documents.append(Document(page_content=markdown_content, metadata=metadata))
+            item_dict = item.model_dump() if hasattr(item, "model_dump") else item
+            md = item_dict.get("markdown", "")
+            meta = item_dict.get("metadata", {})
+            meta["reference"] = meta.get("url", url)
+            documents.append(Document(page_content=md, metadata=meta))
 
         return documents
