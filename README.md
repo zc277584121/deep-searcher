@@ -210,6 +210,16 @@ result = query("Write a report about xxx.") # Your question here
 </details>
 
 <details>
+  <summary>Example (OpenAI embedding Azure)</summary>
+    <p> Make sure you have prepared your OpenAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("embedding", "OpenAIEmbedding", {
+    "model": "text-embedding-ada-002",
+    "azure_endpoint": "https://<youraifoundry>.openai.azure.com/",
+    "api_version": "2023-05-15"
+})</code></pre>
+</details>
+
+<details>
   <summary>Example (Pymilvus built-in embedding model)</summary>
     <p> Use the built-in embedding model in Pymilvus, you can set the model name as <code>"default"</code>, <code>"BAAI/bge-base-en-v1.5"</code>, <code>"BAAI/bge-large-en-v1.5"</code>, <code>"jina-embeddings-v3"</code>, etc. <br/>
     See [milvus_embedding.py](deepsearcher/embedding/milvus_embedding.py) for more details.  </p>
@@ -311,6 +321,18 @@ result = query("Write a report about xxx.") # Your question here
             target="_blank">Public Endpoint and API Key</a> in Zilliz Cloud.
         </li>
     </ul>
+
+</details>
+
+<details>
+  <summary>Example (AZURE AI Search)</summary>
+    <pre><code>config.set_provider_config("vector_db", "AzureSearch", {
+    "endpoint": "https://<yourazureaisearch>.search.windows.net",
+    "index_name": "<yourindex>",
+    "api_key": "<yourkey>",
+    "vector_field": ""
+})</code></pre>
+    <p> More details about Milvus Config:</p>
 
 </details>
 
