@@ -1,27 +1,19 @@
 import uuid
 from typing import Any, Dict, List, Optional
 
-from azure.core.credentials import AzureKeyCredential
-from azure.core.exceptions import ResourceNotFoundError
-from azure.search.documents import SearchClient
-from azure.search.documents.indexes import SearchIndexClient
-from azure.search.documents.indexes.models import (
-    # VectorSearchAlgorithmConfiguration,
-    SearchableField,
-    SearchField,
-    SearchIndex,
-    # SearchFieldDataType,
-    SimpleField,
-)
-
 from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
 
 
 class AzureSearch(BaseVectorDB):
     def __init__(self, endpoint, index_name, api_key, vector_field):
         super().__init__(default_collection=index_name)
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents import SearchClient
+
         self.client = SearchClient(
-            endpoint=endpoint, index_name=index_name, credential=AzureKeyCredential(api_key)
+            endpoint=endpoint,
+            index_name=index_name,
+            credential=AzureKeyCredential(api_key),
         )
         self.vector_field = vector_field
         self.endpoint = endpoint
@@ -30,6 +22,16 @@ class AzureSearch(BaseVectorDB):
 
     def init_collection(self):
         """Initialize Azure Search index with proper schema"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.core.exceptions import ResourceNotFoundError
+        from azure.search.documents.indexes import SearchIndexClient
+        from azure.search.documents.indexes.models import (
+            SearchableField,
+            SearchField,
+            SearchIndex,
+            SimpleField,
+        )
+
         index_client = SearchIndexClient(
             endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key)
         )
@@ -63,6 +65,9 @@ class AzureSearch(BaseVectorDB):
 
     def insert_data(self, documents: List[dict]):
         """Batch insert documents with vector embeddings"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents import SearchClient
+
         search_client = SearchClient(
             endpoint=self.endpoint,
             index_name=self.index_name,
@@ -86,6 +91,9 @@ class AzureSearch(BaseVectorDB):
         self, collection: Optional[str], vector: List[float], top_k: int = 50
     ) -> List[RetrievalResult]:
         """Azure Cognitive Search implementation with compatibility for older SDK versions"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents import SearchClient
+
         search_client = SearchClient(
             endpoint=self.endpoint,
             index_name=collection or self.index_name,
@@ -116,7 +124,12 @@ class AzureSearch(BaseVectorDB):
                 "select": "id,content",
                 "top": top_k,
                 "vectorQueries": [
-                    {"vector": vector, "fields": self.vector_field, "k": top_k, "kind": "vector"}
+                    {
+                        "vector": vector,
+                        "fields": self.vector_field,
+                        "k": top_k,
+                        "kind": "vector",
+                    }
                 ],
             }
 
@@ -190,6 +203,9 @@ class AzureSearch(BaseVectorDB):
 
     def clear_db(self):
         """Delete all documents in the index"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents import SearchClient
+
         search_client = SearchClient(
             endpoint=self.endpoint,
             index_name=self.index_name,
@@ -206,6 +222,9 @@ class AzureSearch(BaseVectorDB):
 
     def get_all_collections(self) -> List[str]:
         """List all search indices in Azure Cognitive Search"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents.indexes import SearchIndexClient
+
         try:
             index_client = SearchIndexClient(
                 endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key)
@@ -217,6 +236,9 @@ class AzureSearch(BaseVectorDB):
 
     def get_collection_info(self, name: str) -> Dict[str, Any]:
         """Retrieve index metadata"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents.indexes import SearchIndexClient
+
         index_client = SearchIndexClient(
             endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key)
         )
@@ -224,6 +246,8 @@ class AzureSearch(BaseVectorDB):
 
     def collection_exists(self, name: str) -> bool:
         """Check index existence"""
+        from azure.core.exceptions import ResourceNotFoundError
+
         try:
             self.get_collection_info(name)
             return True
@@ -232,6 +256,9 @@ class AzureSearch(BaseVectorDB):
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
         """List all Azure Search indices with metadata"""
+        from azure.core.credentials import AzureKeyCredential
+        from azure.search.documents.indexes import SearchIndexClient
+
         try:
             index_client = SearchIndexClient(
                 endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key)

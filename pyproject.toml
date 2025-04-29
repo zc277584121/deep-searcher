@@ -6,7 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
     "argparse>=1.4.0",
     "fastapi>=0.115.9",
-    "firecrawl-py>=1.12.0",
+    "firecrawl-py>=2.3.0",
     "langchain-text-splitters>=0.3.6",
     "numpy>=2.2.3",
     "openai>=1.65.1",
