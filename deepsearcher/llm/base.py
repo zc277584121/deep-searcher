@@ -83,10 +83,7 @@ class BaseLLM(ABC):
         """
         response_content = response_content.strip()
 
-        # remove content between <think> and </think>, especial for DeepSeek reasoning model
-        if "<think>" in response_content and "</think>" in response_content:
-            end_of_think = response_content.find("</think>") + len("</think>")
-            response_content = response_content[end_of_think:]
+        response_content = BaseLLM.remove_think(response_content)
 
         try:
             if response_content.startswith("```") and response_content.endswith("```"):
@@ -113,3 +110,11 @@ class BaseLLM(ABC):
             return ast.literal_eval(json_part)
 
         return result
+
+    @staticmethod
+    def remove_think(response_content: str) -> str:
+        # remove content between <think> and </think>, especial for reasoning model
+        if "<think>" in response_content and "</think>" in response_content:
+            end_of_think = response_content.find("</think>") + len("</think>")
+            response_content = response_content[end_of_think:]
+        return response_content.strip()

@@ -60,13 +60,15 @@ class RAGRouter(RAGAgent):
         prompt = RAG_ROUTER_PROMPT.format(query=query, description_str=description_str)
         chat_response = self.llm.chat(messages=[{"role": "user", "content": prompt}])
         try:
-            selected_agent_index = int(chat_response.content) - 1
+            selected_agent_index = int(self.llm.remove_think(chat_response.content)) - 1
         except ValueError:
             # In some reasoning LLM, the output is not a number, but a explaination string with a number in the end.
             log.warning(
                 "Parse int failed in RAGRouter, but will try to find the last digit as fallback."
             )
-            selected_agent_index = int(self.find_last_digit(chat_response.content)) - 1
+            selected_agent_index = (
+                int(self.find_last_digit(self.llm.remove_think(chat_response.content))) - 1
+            )
 
         selected_agent = self.rag_agents[selected_agent_index]
         log.color_print(

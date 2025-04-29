@@ -114,7 +114,7 @@ class DeepSearch(RAGAgent):
                 {"role": "user", "content": SUB_QUERY_PROMPT.format(original_query=original_query)}
             ]
         )
-        response_content = chat_response.content
+        response_content = self.llm.remove_think(chat_response.content)
         return self.llm.literal_eval(response_content), chat_response.total_tokens
 
     async def _search_chunks_from_vectordb(self, query: str, sub_queries: List[str]):
@@ -155,11 +155,7 @@ class DeepSearch(RAGAgent):
                     ]
                 )
                 consume_tokens += chat_response.total_tokens
-                response_content = chat_response.content.strip()
-                # strip the reasoning text if exists
-                if "<think>" in response_content and "</think>" in response_content:
-                    end_of_think = response_content.find("</think>") + len("</think>")
-                    response_content = response_content[end_of_think:].strip()
+                response_content = self.llm.remove_think(chat_response.content).strip()
                 if "YES" in response_content and "NO" not in response_content:
                     all_retrieved_results.append(retrieved_result)
                     accepted_chunk_num += 1
@@ -185,7 +181,7 @@ class DeepSearch(RAGAgent):
             else "NO RELATED CHUNKS FOUND.",
         )
         chat_response = self.llm.chat([{"role": "user", "content": reflect_prompt}])
-        response_content = chat_response.content
+        response_content = self.llm.remove_think(chat_response.content)
         return self.llm.literal_eval(response_content), chat_response.total_tokens
 
     def retrieve(self, original_query: str, **kwargs) -> Tuple[List[RetrievalResult], int, dict]:
@@ -309,9 +305,9 @@ class DeepSearch(RAGAgent):
         )
         chat_response = self.llm.chat([{"role": "user", "content": summary_prompt}])
         log.color_print("\n==== FINAL ANSWER====\n")
-        log.color_print(chat_response.content)
+        log.color_print(self.llm.remove_think(chat_response.content))
         return (
-            chat_response.content,
+            self.llm.remove_think(chat_response.content),
             all_retrieved_results,
             n_token_retrieval + chat_response.total_tokens,
         )
