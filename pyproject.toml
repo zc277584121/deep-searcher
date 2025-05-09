@@ -33,6 +33,10 @@ deepsearcher = "deepsearcher.cli:main"
 [dependency-groups]
 dev = [
     "ruff>=0.9.9",
+    "mkdocs-material>=9.5.40",
+    "mkdocs-jupyter>=0.25.0",
+    "mkdocs-click>=0.8.1",
+    "mkdocstrings[python]>=0.27.0",
 ]
 
 [project.optional-dependencies]
