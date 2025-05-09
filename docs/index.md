@@ -1,4 +1,4 @@
-# 🔍 TestDeepSearcher
+# 🔍 DeepSearcher
 
 ![DeepSearcher](./assets/pic/logo.png)
 
