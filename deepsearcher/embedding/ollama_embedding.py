@@ -45,7 +45,7 @@ class OllamaEmbedding(BaseEmbedding):
         else:
             dimension = OLLAMA_MODEL_DIM_MAP[model]
         self.dim = dimension
-        self.client = Client(host=base_url)
+        self.client = Client(host=base_url, **kwargs)
         self.batch_size = batch_size
 
     def embed_query(self, text: str) -> List[float]:
