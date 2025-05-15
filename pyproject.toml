@@ -57,6 +57,7 @@ all = [
     "docling>=2.15.1",
     "docling-core>=2.30.0",
     "crawl4ai>=0.6.2",
+    "sentence-transformers>=4.1.0",
 ]
 
 voyageai = [
@@ -102,6 +103,9 @@ crawl4ai = [
     "crawl4ai>=0.6.2",
 ]
 
+sentence-transformers = [
+    "sentence-transformers>=4.1.0",
+]
 
 
 [build-system]

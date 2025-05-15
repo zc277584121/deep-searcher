@@ -7,6 +7,7 @@ from .novita_embedding import NovitaEmbedding
 from .ollama_embedding import OllamaEmbedding
 from .openai_embedding import OpenAIEmbedding
 from .ppio_embedding import PPIOEmbedding
+from .sentence_transformer_embedding import SentenceTransformerEmbedding
 from .siliconflow_embedding import SiliconflowEmbedding
 from .volcengine_embedding import VolcengineEmbedding
 from .voyage_embedding import VoyageEmbedding
@@ -24,4 +25,5 @@ __all__ = [
     "OllamaEmbedding",
     "FastEmbedEmbedding",
     "NovitaEmbedding",
+    "SentenceTransformerEmbedding",
 ]

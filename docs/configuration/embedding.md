@@ -23,6 +23,7 @@ config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict
 | **SiliconflowEmbedding** | Siliconflow's models | Enterprise support |
 | **VolcengineEmbedding** | Volcengine embedding | High throughput |
 | **NovitaEmbedding** | Novita AI embedding | Cost-effective |
+| **SentenceTransformerEmbedding** | Sentence Transfomer Embedding | Self-hosted option |
 
 ## 🔍 Provider Examples
 
@@ -107,4 +108,11 @@ config.set_provider_config("embedding", "VoyageEmbedding", {"model": "voyage-3"}
     ```python
     config.set_provider_config("embedding", "PPIOEmbedding", {"model": "baai/bge-m3"})
     ```
-    *Requires `PPIO_API_KEY` environment variable* 
+    *Requires `PPIO_API_KEY` environment variable*
+
+??? example "SentenceTransformer"
+
+    ```python
+    config.set_provider_config("embedding", "SentenceTransformerEmbedding", {"model": "BAAI/bge-large-zh-v1.5"})
+    ```
+    *Requires `pip install sentence-transformers`*

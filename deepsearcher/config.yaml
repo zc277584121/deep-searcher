@@ -95,6 +95,9 @@ provide_settings:
 #      model: "baai/bge-m3"
 ##      api_key: "sk_xxxxxx"  # Uncomment to override the `NOVITA_API_KEY` set in the environment variable
 
+    # provider: "SentenceTransformerEmbedding"
+    # config:
+    #   model: "BAAI/bge-large-zh-v1.5"
 
   file_loader:
     provider: "PDFLoader"
