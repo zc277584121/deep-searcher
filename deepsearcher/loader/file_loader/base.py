@@ -41,19 +41,22 @@ class BaseLoader(ABC):
 
     def load_directory(self, directory: str) -> List[Document]:
         """
-        Load all supported files from a directory.
+        Load all supported files from a directory and its subdirectories recursively.
 
         Args:
             directory: Path to the directory containing files to be loaded.
 
         Returns:
-            A list of Document objects from all supported files in the directory.
+            A list of Document objects from all supported files in the directory and subdirectories.
         """
         documents = []
-        for file in os.listdir(directory):
-            for suffix in self.supported_file_types:
-                if file.endswith(suffix):
-                    documents.extend(self.load_file(os.path.join(directory, file)))
+        for root, _, files in os.walk(directory):
+            for file in files:
+                for suffix in self.supported_file_types:
+                    if file.endswith(suffix):
+                        full_path = os.path.join(root, file)
+                        documents.extend(self.load_file(full_path))
+                        break
         return documents
 
     @property
