@@ -133,7 +133,7 @@ class DeepSearch(RAGAgent):
         for collection in selected_collections:
             log.color_print(f"<search> Search [{query}] in [{collection}]...  </search>\n")
             retrieved_results = self.vector_db.search_data(
-                collection=collection, vector=query_vector
+                collection=collection, vector=query_vector, query_text=query
             )
             if not retrieved_results or len(retrieved_results) == 0:
                 log.color_print(

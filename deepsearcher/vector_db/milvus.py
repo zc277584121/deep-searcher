@@ -1,7 +1,7 @@
 from typing import List, Optional, Union
 
 import numpy as np
-from pymilvus import DataType, MilvusClient
+from pymilvus import AnnSearchRequest, DataType, Function, FunctionType, MilvusClient, RRFRanker
 
 from deepsearcher.loader.splitter import Chunk
 from deepsearcher.utils import log
@@ -19,6 +19,7 @@ class Milvus(BaseVectorDB):
         uri: str = "http://localhost:19530",
         token: str = "root:Milvus",
         db: str = "default",
+        hybrid: bool = False,
     ):
         """
         Initialize the Milvus client.
@@ -28,10 +29,13 @@ class Milvus(BaseVectorDB):
             uri (str, optional): URI for connecting to Milvus server. Defaults to "http://localhost:19530".
             token (str, optional): Authentication token for Milvus. Defaults to "root:Milvus".
             db (str, optional): Database name. Defaults to "default".
+            hybrid (bool, optional): Whether to enable hybrid search. Defaults to False.
         """
         super().__init__(default_collection)
         self.default_collection = default_collection
         self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
+
+        self.hybrid = hybrid
 
     def init_collection(
         self,
@@ -63,6 +67,9 @@ class Milvus(BaseVectorDB):
             collection = self.default_collection
         if description is None:
             description = ""
+
+        self.metric_type = metric_type
+
         try:
             has_collection = self.client.has_collection(collection, timeout=5)
             if force_new_collection and has_collection:
@@ -74,11 +81,43 @@ class Milvus(BaseVectorDB):
             )
             schema.add_field("id", DataType.INT64, is_primary=True)
             schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=dim)
-            schema.add_field("text", DataType.VARCHAR, max_length=text_max_length)
+
+            if self.hybrid:
+                analyzer_params = {"tokenizer": "standard", "filter": ["lowercase"]}
+                schema.add_field(
+                    "text",
+                    DataType.VARCHAR,
+                    max_length=text_max_length,
+                    analyzer_params=analyzer_params,
+                    enable_match=True,
+                    enable_analyzer=True,
+                )
+            else:
+                schema.add_field("text", DataType.VARCHAR, max_length=text_max_length)
+
             schema.add_field("reference", DataType.VARCHAR, max_length=reference_max_length)
             schema.add_field("metadata", DataType.JSON)
+
+            if self.hybrid:
+                schema.add_field("sparse_vector", DataType.SPARSE_FLOAT_VECTOR)
+                bm25_function = Function(
+                    name="bm25",
+                    function_type=FunctionType.BM25,
+                    input_field_names=["text"],
+                    output_field_names="sparse_vector",
+                )
+                schema.add_function(bm25_function)
+
             index_params = self.client.prepare_index_params()
             index_params.add_index(field_name="embedding", metric_type=metric_type)
+
+            if self.hybrid:
+                index_params.add_index(
+                    field_name="sparse_vector",
+                    index_type="SPARSE_INVERTED_INDEX",
+                    metric_type="BM25",
+                )
+
             self.client.create_collection(
                 collection,
                 schema=schema,
@@ -137,6 +176,7 @@ class Milvus(BaseVectorDB):
         collection: Optional[str],
         vector: Union[np.array, List[float]],
         top_k: int = 5,
+        query_text: Optional[str] = None,
         *args,
         **kwargs,
     ) -> List[RetrievalResult]:
@@ -147,6 +187,7 @@ class Milvus(BaseVectorDB):
             collection (Optional[str]): Collection name. If None, uses default_collection.
             vector (Union[np.array, List[float]]): Query vector for similarity search.
             top_k (int, optional): Number of results to return. Defaults to 5.
+            query_text (Optional[str], optional): Original query text for hybrid search. Defaults to None.
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
 
@@ -156,13 +197,35 @@ class Milvus(BaseVectorDB):
         if not collection:
             collection = self.default_collection
         try:
-            search_results = self.client.search(
-                collection_name=collection,
-                data=[vector],
-                limit=top_k,
-                output_fields=["embedding", "text", "reference", "metadata"],
-                timeout=10,
-            )
+            use_hybrid = self.hybrid and query_text
+
+            if use_hybrid:
+                sparse_search_params = {"metric_type": "BM25"}
+                sparse_request = AnnSearchRequest(
+                    [query_text], "sparse_vector", sparse_search_params, limit=top_k
+                )
+
+                dense_search_params = {"metric_type": self.metric_type}
+                dense_request = AnnSearchRequest(
+                    [vector], "embedding", dense_search_params, limit=top_k
+                )
+
+                search_results = self.client.hybrid_search(
+                    collection_name=collection,
+                    reqs=[sparse_request, dense_request],
+                    ranker=RRFRanker(),
+                    limit=top_k,
+                    output_fields=["embedding", "text", "reference", "metadata"],
+                    timeout=10,
+                )
+            else:
+                search_results = self.client.search(
+                    collection_name=collection,
+                    data=[vector],
+                    limit=top_k,
+                    output_fields=["embedding", "text", "reference", "metadata"],
+                    timeout=10,
+                )
 
             return [
                 RetrievalResult(

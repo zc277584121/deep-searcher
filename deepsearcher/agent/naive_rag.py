@@ -86,6 +86,7 @@ class NaiveRAG(RAGAgent):
                 collection=collection,
                 vector=self.embedding_model.embed_query(query),
                 top_k=max(self.top_k // len(selected_collections), 1),
+                query_text=query,
             )
             all_retrieved_results.extend(retrieval_res)
         all_retrieved_results = deduplicate_results(all_retrieved_results)

@@ -148,8 +148,7 @@ class ChainOfRAG(RAGAgent):
             log.color_print(f"<search> Search [{query}] in [{collection}]...  </search>\n")
             query_vector = self.embedding_model.embed_query(query)
             retrieved_results = self.vector_db.search_data(
-                collection=collection,
-                vector=query_vector,
+                collection=collection, vector=query_vector, query_text=query
             )
             all_retrieved_results.extend(retrieved_results)
         all_retrieved_results = deduplicate_results(all_retrieved_results)
