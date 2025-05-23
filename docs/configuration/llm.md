@@ -14,7 +14,7 @@ config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")
 |----------|-------------|------------|
 | **OpenAI** | OpenAI's API for GPT models | o1-mini, GPT-4 |
 | **DeepSeek** | DeepSeek AI offering | deepseek-reasoner, coder |
-| **Anthropic** | Anthropic's Claude models | claude-3-opus, claude-3-sonnet |
+| **Anthropic** | Anthropic's Claude models | claude-sonnet-4-0 |
 | **Gemini** | Google's Gemini models | gemini-1.5-pro, gemini-2.0-flash |
 | **XAI** | X.AI's Grok models | grok-2-latest |
 | **Ollama** | Local LLM deployment | llama3, qwq, etc. |
@@ -81,7 +81,7 @@ config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-reasoner"})
 ??? example "Claude"
 
     ```python
-    config.set_provider_config("llm", "Anthropic", {"model": "claude-3-7-sonnet-latest"})
+    config.set_provider_config("llm", "Anthropic", {"model": "claude-sonnet-4-0"})
     ```
     *Requires `ANTHROPIC_API_KEY` environment variable*
     

@@ -21,7 +21,7 @@
 
 ## ✨ Overview
 
-DeepSearcher combines cutting-edge LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 3.7 Sonnet, Llama 4, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answers and comprehensive reports.
+DeepSearcher combines cutting-edge LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 4 Sonnet, Llama 4, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answers and comprehensive reports.
 
 > **Perfect for:** Enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 

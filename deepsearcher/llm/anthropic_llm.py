@@ -17,12 +17,12 @@ class Anthropic(BaseLLM):
         client: The Anthropic client instance.
     """
 
-    def __init__(self, model: str = "claude-3-7-sonnet-latest", max_tokens: int = 8192, **kwargs):
+    def __init__(self, model: str = "claude-sonnet-4-0", max_tokens: int = 8192, **kwargs):
         """
         Initialize an Anthropic language model client.
 
         Args:
-            model (str, optional): The model identifier to use. Defaults to "claude-3-7-sonnet-latest".
+            model (str, optional): The model identifier to use. Defaults to "claude-sonnet-4-0".
             max_tokens (int, optional): The maximum number of tokens to generate. Defaults to 8192.
             **kwargs: Additional keyword arguments to pass to the Anthropic client.
                 - api_key: Anthropic API key. If not provided, uses ANTHROPIC_API_KEY environment variable.
