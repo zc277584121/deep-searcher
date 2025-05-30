@@ -18,8 +18,11 @@ class Milvus(BaseVectorDB):
         default_collection: str = "deepsearcher",
         uri: str = "http://localhost:19530",
         token: str = "root:Milvus",
+        user: str = "",
+        password: str = "",
         db: str = "default",
         hybrid: bool = False,
+        **kwargs,
     ):
         """
         Initialize the Milvus client.
@@ -28,12 +31,17 @@ class Milvus(BaseVectorDB):
             default_collection (str, optional): Default collection name. Defaults to "deepsearcher".
             uri (str, optional): URI for connecting to Milvus server. Defaults to "http://localhost:19530".
             token (str, optional): Authentication token for Milvus. Defaults to "root:Milvus".
+            user (str, optional): Username for authentication. Defaults to "".
+            password (str, optional): Password for authentication. Defaults to "".
             db (str, optional): Database name. Defaults to "default".
             hybrid (bool, optional): Whether to enable hybrid search. Defaults to False.
+            **kwargs: Additional keyword arguments to pass to the MilvusClient.
         """
         super().__init__(default_collection)
         self.default_collection = default_collection
-        self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
+        self.client = MilvusClient(
+            uri=uri, user=user, password=password, token=token, db_name=db, timeout=30, **kwargs
+        )
 
         self.hybrid = hybrid
 

@@ -35,6 +35,11 @@ config.set_provider_config("vector_db", "Milvus", {"uri": "./milvus.db", "token"
     config.set_provider_config("vector_db", "Milvus", {"uri": "http://localhost:19530", "token": ""})
     ```
 
+    Also, you could specify other connection parameters supported by Milvus such as `user`, `password`, `secure` or others.
+    ```python
+    config.set_provider_config("vector_db", "Milvus", {"uri": "http://localhost:19530", "user": "<username>", "password":"<password>", "secure": True, "token": ""})
+    ```
+
 ??? example "Zilliz Cloud (Managed Service)"
 
     [Zilliz Cloud](https://zilliz.com/cloud) provides a fully managed cloud service for Milvus. To use Zilliz Cloud, adjust the `uri` and `token` according to the [Public Endpoint and API Key](https://docs.zilliz.com/docs/on-zilliz-cloud-console#free-cluster-details):

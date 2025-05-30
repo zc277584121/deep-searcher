@@ -341,7 +341,8 @@ result = query("Write a report about xxx.") # Your question here
       <li>
           If you have a large-scale dataset, you can set up a more performant Milvus server using 
           <a href="https://milvus.io/docs/quickstart.md" target="_blank">Docker or Kubernetes</a>. 
-          In this setup, use the server URI, e.g., <code>http://localhost:19530</code>, as your <code>uri</code>.
+          In this setup, use the server URI, e.g., <code>http://localhost:19530</code>, as your <code>uri</code>. 
+          You can also use any other connection parameters supported by Milvus such as <code>host</code>, <code>user</code>, <code>password</code>, or <code>secure</code>.
         </li>
     </ul>
     <ul>
