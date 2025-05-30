@@ -24,6 +24,7 @@ config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict
 | **VolcengineEmbedding** | Volcengine embedding | High throughput |
 | **NovitaEmbedding** | Novita AI embedding | Cost-effective |
 | **SentenceTransformerEmbedding** | Sentence Transfomer Embedding | Self-hosted option |
+| **IBM watsonx.ai** | Various options | IBM's Enterprise AI platform |
 
 ## 🔍 Provider Examples
 
@@ -116,3 +117,10 @@ config.set_provider_config("embedding", "VoyageEmbedding", {"model": "voyage-3"}
     config.set_provider_config("embedding", "SentenceTransformerEmbedding", {"model": "BAAI/bge-large-zh-v1.5"})
     ```
     *Requires `pip install sentence-transformers`*
+
+??? example "IBM WatsonX"
+
+    ```python
+    config.set_provider_config("embedding", "WatsonXEmbedding", {"model": "ibm/slate-125m-english-rtrvr-v2"})
+    ```
+    *Requires `pip install ibm-watsonx-ai`*

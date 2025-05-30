@@ -12,6 +12,7 @@ from .ppio import PPIO
 from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
 from .volcengine import Volcengine
+from .watsonx import WatsonX
 from .xai import XAI
 
 __all__ = [
@@ -30,4 +31,5 @@ __all__ = [
     "Bedrock",
     "Novita",
     "Aliyun",
+    "WatsonX",
 ]

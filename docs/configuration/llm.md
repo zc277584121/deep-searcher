@@ -25,6 +25,7 @@ config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")
 | **GLM** | ChatGLM models | glm-4-plus |
 | **Bedrock** | Amazon Bedrock LLMs | anthropic.claude, ai21.j2 |
 | **Novita** | Novita AI models | Various options |
+| **IBM watsonx.ai** | IBM Enterprise AI platform | Various options |
 
 ## 🔍 Provider Examples
 
@@ -41,6 +42,13 @@ config.set_provider_config("llm", "OpenAI", {"model": "o1-mini"})
 config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-reasoner"})
 ```
 *Requires `DEEPSEEK_API_KEY` environment variable*
+
+### IBM WatsonX
+
+```python
+config.set_provider_config("llm", "WatsonX", {"model": "ibm/granite-3-3-8b-instruct"})
+```
+*Requires `WATSONX_APIKEY`, `WATSONX_URL`, and `WATSONX_PROJECT_ID` environment variables*
 
 ## 📚 Additional Providers
 
@@ -153,3 +161,32 @@ config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-reasoner"})
     *Requires `OPENAI_API_KEY` environment variable*
     
     More details about Aliyun Bailian models: [https://bailian.console.aliyun.com](https://bailian.console.aliyun.com) 
+
+??? example "IBM watsonx.ai LLM"
+
+    ```python
+    config.set_provider_config("llm", "WatsonX", {"model": "ibm/granite-3-3-8b-instruct"})
+    ```
+
+    With custom parameters:
+    ```python
+    config.set_provider_config("llm", "WatsonX", {
+        "model": "ibm/granite-3-3-8b-instruct",
+        "max_new_tokens": 1000,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "top_k": 50
+    })
+    ```
+
+    With space_id instead of project_id:
+    ```python
+    config.set_provider_config("llm", "WatsonX", {
+        "model": "ibm/granite-3-3-8b-instruct""
+    })
+    ```
+
+    *Requires `WATSONX_APIKEY`, `WATSONX_URL`, and `WATSONX_PROJECT_ID` environment variables and `pip install ibm-watsonx-ai`*
+
+    More details about WatsonX: [https://www.ibm.com/products/watsonx-ai/foundation-models](https://www.ibm.com/products/watsonx-ai/foundation-models)
+```

@@ -24,6 +24,7 @@ Support for various embedding models to convert text into vector representations
 | **[FastEmbed](https://qdrant.github.io/fastembed/)** | None | Fast lightweight embeddings |
 | **[PPIO](https://ppinfra.com/model-api/product/llm-api)** | `PPIO_API_KEY` | Flexible cloud embeddings |
 | **[Novita AI](https://novita.ai/docs/api-reference/model-apis-llm-create-embeddings)** | `NOVITA_API_KEY` | Rich model selection |
+| **[IBM watsonx.ai](https://www.ibm.com/products/watsonx-ai/foundation-models#ibmembedding)** | `WATSONX_APIKEY`, `WATSONX_URL`, `WATSONX_PROJECT_ID` | IBM's Enterprise AI platform |
 
 ## 🧠 Large Language Models {#llm-support}
 
@@ -42,6 +43,7 @@ Support for various large language models (LLMs) to process queries and generate
 | **[SambaNova](https://docs.together.ai/docs/introduction)** | `SAMBANOVA_API_KEY` | High-performance AI platform |
 | **[Ollama](https://ollama.com/)** | None | Local LLM deployment |
 | **[Novita AI](https://novita.ai/docs/guides/introduction)** | `NOVITA_API_KEY` | Diverse AI services |
+| **[IBM watsonx.ai](https://www.ibm.com/products/watsonx-ai/foundation-models#ibmfm)** | `WATSONX_APIKEY`, `WATSONX_URL`, `WATSONX_PROJECT_ID` | IBM's Enterprise AI platform |
 
 ## 📄 Document Loader {#document-loader}
 

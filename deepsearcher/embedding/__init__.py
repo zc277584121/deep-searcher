@@ -11,6 +11,7 @@ from .sentence_transformer_embedding import SentenceTransformerEmbedding
 from .siliconflow_embedding import SiliconflowEmbedding
 from .volcengine_embedding import VolcengineEmbedding
 from .voyage_embedding import VoyageEmbedding
+from .watsonx_embedding import WatsonXEmbedding
 
 __all__ = [
     "MilvusEmbedding",
@@ -26,4 +27,5 @@ __all__ = [
     "FastEmbedEmbedding",
     "NovitaEmbedding",
     "SentenceTransformerEmbedding",
+    "WatsonXEmbedding",
 ]
