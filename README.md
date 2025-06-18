@@ -50,7 +50,7 @@ pip install "deepsearcher[ollama]"
 ```
 
 #### Option 2: Install in Development Mode
-We recommend using [uv](https://github.com/astral-sh/uv) for faster and more reliable installation. Follow the [offical installation instructions](https://docs.astral.sh/uvgetting-started/installation/) to install it.
+We recommend using [uv](https://github.com/astral-sh/uv) for faster and more reliable installation. Follow the [offical installation instructions](https://docs.astral.sh/uv/getting-started/installation/) to install it.
 
 Clone the repository and navigate to the project directory:
 ```shell

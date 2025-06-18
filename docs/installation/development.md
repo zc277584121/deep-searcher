@@ -29,7 +29,7 @@ This guide is for contributors who want to modify DeepSearcher's code or develop
     irm https://astral.sh/uv/install.ps1 | iex
     ```
 
-For more options, see the [official uv installation guide](https://docs.astral.sh/uvgetting-started/installation/).
+For more options, see the [official uv installation guide](https://docs.astral.sh/uv/getting-started/installation/).
 
 ### Step 2: Clone the repository
 
