@@ -12,7 +12,7 @@ from pymilvus import MilvusClient
 
 def main():
     p.ROOT.mkdir(parents=True, exist_ok=True)
-    with gzip.open(p.HERE / "fixtures/corpus.json.gz", "rt") as handle:
+    with gzip.open(p.HERE / "artifacts/fixtures/corpus.json.gz", "rt") as handle:
         corpus = json.load(handle)
     (p.ROOT / "corpus.json").write_text(json.dumps(corpus))
     subprocess.run([sys.executable, str(p.HERE / "bge_worker.py")], input="", text=True, check=True)

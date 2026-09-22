@@ -9,12 +9,15 @@ from pathlib import Path
 
 import experiment_common as p
 
-ROOT = Path(__file__).resolve().parent / "results"
+SUMMARY = Path(__file__).resolve().parent / "results"
+ROOT = Path(__file__).resolve().parent / "artifacts" / "results"
 
 
 def main():
-    report = json.loads((ROOT / "report.json").read_text())
-    manifest = json.loads((ROOT / "manifest.json").read_text())
+    if not (ROOT / "calls.json").exists():
+        raise SystemExit("Run uv run python fetch_artifacts.py before replaying results.")
+    report = json.loads((SUMMARY / "report.json").read_text())
+    manifest = json.loads((SUMMARY / "manifest.json").read_text())
     calls = json.loads((ROOT / "calls.json").read_text())
     expected_rows = json.loads((ROOT / "results.json").read_text())
     data = json.loads((p.SOURCE / "examples/data/2wikimultihopqa.json").read_text())
@@ -96,7 +99,7 @@ def main():
             for r in expected_rows
         )
         assert lost == report["policies"][policy]["queries_losing_later_evidence"]
-    cost = json.loads((ROOT / "decision_cost_estimate.json").read_text())
+    cost = json.loads((SUMMARY / "decision_cost_estimate.json").read_text())
     for policy, stage in [("llm", "stop"), ("jev", "jev")]:
         selected = [
             calls[f"q{r['idx']}-r{ri}-{stage}"]
