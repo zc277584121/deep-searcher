@@ -214,7 +214,7 @@
   "concurrency": 8,
   "llm_interval_seconds": 2.3,
   "model": "deepseek-v4-flash",
-  "base_url": "REDACTED: company-hosted OpenAI-compatible endpoint",
+  "base_url": "REDACTED: OpenAI-compatible endpoint",
   "jev_model": "jev-1.13.0",
   "jev_threshold": 0.5,
   "jev_question": {

@@ -13,7 +13,7 @@
     "usd": 0.005917506
   },
   "assumptions": [
-    "DeepSeek uses current public Flash (V4.1) rates as a reference for company-hosted deepseek-v4-flash, not actual company billing.",
+    "DeepSeek uses public Flash (V4.1) reference rates as a pricing proxy for the recorded deepseek-v4-flash service, not a measured bill.",
     "All DeepSeek input priced as cache miss; output includes reasoning tokens.",
     "Jev uses the experiment price reference of $0.042 per million input tokens."
   ],

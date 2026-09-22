@@ -24,7 +24,7 @@ The existing 1,000-query dataset is sampled with seed `20260922`, stratified by 
 
 Each query produces one complete seven-round trajectory. Both stopping models see the same main question and accumulated intermediate questions and answers at each round. Each policy is replayed to its first affirmative decision, or the seven-round cap. Seven is a **maximum** for these policies; the reference deliberately executes all seven rounds. Full trajectories allow later missed evidence to be measured. This is paired shared-trajectory replay, not independent end-to-end timing.
 
-Generation uses the company-hosted endpoint's `deepseek-v4-flash` model identifier. The endpoint's underlying weights cannot be independently verified. The original ChainOfRAG prompts are preserved byte-for-byte in [a source fixture](fixtures/chain_of_rag.py) and parsed without importing or executing that file. Jev uses `jev-1.13.0`, one `noul` question, explicit true/false criteria including missing multi-hop links, and a fixed threshold of 0.5. No prompt or threshold tuning was performed on this frozen sample.
+Query generation, intermediate answers, and the baseline stopping decisions use an OpenAI-compatible API with model identifier `deepseek-v4-flash`. This identifier records the service used in the experiment; it is not a verification of the underlying model weights. The original ChainOfRAG prompts are preserved byte-for-byte in [a source fixture](fixtures/chain_of_rag.py) and parsed without importing or executing that file. Jev uses `jev-1.13.0`, one `noul` question, explicit true/false criteria including missing multi-hop links, and a fixed threshold of 0.5. No prompt or threshold tuning was performed on this frozen sample.
 
 Retrieval uses the historical 6,119-document corpus rebuilt with BGE-large-en-v1.5, normalized CLS embeddings, cosine similarity and top 5 retrieval. BGE tokenization truncates 90 documents to 512 tokens for embedding; the full stored document text remains available to generation. The corpus and exact embedding revision are bundled. Corpus metadata and order are preserved; only machine-specific file references were replaced with a relative dataset filename.
 
@@ -36,7 +36,7 @@ The latency panel uses 689 newly executed successful decision requests per model
 
 Decision cost includes only the calls that each stopping policy would execute: DeepSeek 296 calls (68,313 input and 57,322 output tokens, including reported reasoning); Jev 300 calls (140,893 input tokens). It excludes query generation, intermediate answers, document selection, embeddings and database costs.
 
-DeepSeek is estimated at the [current public Flash off-peak rates](https://api-docs.deepseek.com/quick_start/pricing/) of $0.15/M input and $0.60/M output, without cache discounts. These public rates refer to V4.1 Flash and serve only as a pricing proxy for the company-hosted model identifier, not its actual bill. Jev uses the experiment's $0.042/M input reference. The resulting estimates are $0.04464015 and $0.005917506 per 100 queries. The price assumptions and usage totals are recorded in [decision_cost_estimate.json](results/decision_cost_estimate.json).
+DeepSeek is estimated at the [public Flash off-peak reference rates](https://api-docs.deepseek.com/quick_start/pricing/) of $0.15/M input and $0.60/M output, without cache discounts. These rates refer to V4.1 Flash and are a pricing proxy for the recorded `deepseek-v4-flash` service, not a measured bill. The estimates exclude cache discounts and should be recalculated for the provider used in a new run. Jev uses the experiment's $0.042/M input reference. The resulting estimates are $0.04464015 and $0.005917506 per 100 queries. The price assumptions and usage totals are recorded in [decision_cost_estimate.json](results/decision_cost_estimate.json).
 
 The actual full-trajectory experiment made 689 new Jev calls and used about $0.0149; that experiment expenditure is distinct from the $0.0059 policy deployment estimate.
 
@@ -50,7 +50,23 @@ uv run python -m unittest test_full100 -v
 uv run python plot_comparison.py
 ```
 
-The replay checks all 100 queries and 700 states, recomputes evidence metrics, policy stopping positions, token/request totals and decision cost inputs against the published summaries. Per-round traces, per-query results, per-call usage and sanitized attempt timing records are included. The original paid run additionally audited every request prompt and response against its raw cache before marking the run complete. Raw response caches and private endpoints are not published; API-reported usage and latency remain recorded observations, not independently inferred from text.
+The replay checks all 100 queries and 700 states, recomputes evidence metrics, policy stopping positions, token/request totals and decision cost inputs against the published summaries. Per-round traces, per-query results, per-call usage and sanitized attempt timing records are included. The original paid run additionally audited every request prompt and response against its raw cache before marking the run complete. The published artifacts are sufficient for offline metric replay. API-reported usage and latency are recorded observations; verifying them independently requires a new API run.
+
+## Included files
+
+| Path | Purpose |
+| --- | --- |
+| `results/` | Recorded decisions, evidence traces, metrics, usage, timing, and charts |
+| `fixtures/` | Frozen ChainOfRAG prompt source, retrieval corpus, and embedding revision |
+| `replay_results.py` | Recompute and check published aggregates without API calls |
+| `run_full100.py` / `finalize_full100.py` | Resume a new experiment and audit completed results |
+| `test_full100.py` | Offline checks for parsing, retries, rate limiting, and sampling |
+
+The questions come from the repository's existing [`2wikimultihopqa.json`](../../examples/data/2wikimultihopqa.json). The bundled corpus is the retrieval material used for that evaluation. This directory has its own uv environment and does not add dependencies to the application.
+
+## Integration scope
+
+Jev is called only by this evaluation runner. Installing DeepSearcher does not enable Jev or change `ChainOfRAG`. A production integration would expose a configurable stopping policy in the agent, with explicit timeout and failure behavior; it is outside this experiment's scope.
 
 ## Run a new experiment
 
@@ -59,7 +75,7 @@ Use a Linux environment supported by Milvus Lite; a CUDA GPU is recommended for 
 ```bash
 cd evaluation/jev_stopping
 export LLM_BASE_URL="https://your-provider.example/v1"
-export LLM_MODEL="deepseek-v4-flash"
+export LLM_MODEL="your-provider-model-id"
 # Set LLM_API_KEY and TYPESAFE_API_KEY securely in your shell.
 export EXPERIMENT_DIR="$PWD/runs/my-experiment"
 uv sync --extra run
@@ -67,6 +83,8 @@ uv run --extra run python prepare_index.py
 uv run --extra run python run_full100.py
 uv run --extra run python finalize_full100.py
 ```
+
+Choose a model identifier supported by your endpoint; the recorded run used `deepseek-v4-flash`. Changing the endpoint or model creates a new comparison, not an exact reproduction of the measured latency.
 
 `prepare_index.py` downloads the pinned BGE model and reconstructs the index from the bundled corpus; it makes no paid API calls. `BGE_MODEL_PATH` can point to an existing model snapshot and `BGE_DEVICE` can select `cpu` or `cuda`. A rerun may differ due to provider/model changes, numerical differences and generation nondeterminism.
 
